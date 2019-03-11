@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.alexanderhofmeister.rechnungen.view.CustomerOverviewController">
+    <Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="100" prefWidth="1350.0" styleClass="subheading">
+   
+        <Label layoutX="15.0" layoutY="24.0" prefHeight="43.0" prefWidth="468.0" text="Kunden" textFill="#7c8184">
+            <font>
+                <Font size="36.0" />
+            </font>
+        </Label>
+    </Pane>
+    <TextField fx:id="filterField" layoutX="14.0" layoutY="134.0" />
+    <TableView fx:id="customerTable" layoutX="14.0" layoutY="186.0" prefHeight="200.0" prefWidth="328.0">
+        <columns>
+            <TableColumn fx:id="id" prefWidth="75.0" text="#" />
+            <TableColumn fx:id="name" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="address" prefWidth="100.0" text="Anschrift" />
+            <TableColumn fx:id="action" prefWidth="106.39996337890625" text="Aktionen" />
+        </columns>
+    </TableView>
+     <Button fx:id="newCustomer" layoutX="178.0" layoutY="134.0" mnemonicParsing="false" text="Neuer Kunde" />
+
+</AnchorPane>

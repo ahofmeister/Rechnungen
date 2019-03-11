@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="865.0"
+            prefWidth="908.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.alexanderhofmeister.rechnungen.view.MainController">
+    <left>
+        <VBox fillWidth="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="865.0" prefWidth="200.0"
+              styleClass="sidebar" stylesheets="@../css/style.css">
+            <Label alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #969696"
+                   text="Rechnungen" textFill="WHITE">
+                <font>
+                    <Font name="Ebrima" size="18.0"/>
+                </font>
+                <opaqueInsets>
+                    <Insets/>
+                </opaqueInsets>
+                <padding>
+                    <Insets left="10.0"/>
+                </padding>
+            </Label>
+            <HBox alignment="CENTER_LEFT" onMouseClicked="#switchToCustomerPane" prefHeight="50.0" styleClass="buttons">
+                <FontAwesomeIcon fill="#7c8184" iconName="USERS" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" top="10.0"/>
+                    </HBox.margin>
+                </FontAwesomeIcon>
+                <Label alignment="TOP_LEFT" prefHeight="26.0" prefWidth="294.0" text="Kunden" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <styleClass>
+                        <String fx:value="label"/>
+                        <String fx:value="sidebar"/>
+                    </styleClass>
+                    <font>
+                        <Font size="17.0"/>
+                    </font>
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                    <HBox.margin>
+                        <Insets left="10.0" top="10.0"/>
+                    </HBox.margin>
+                </Label>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="260.0" onMouseClicked="#exitApplication"
+                  prefHeight="50.0" prefWidth="325.0" styleClass="buttons">
+                <FontAwesomeIcon fill="#7c8184" iconName="SIGN_OUT" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets left="10.0" top="10.0"/>
+                    </HBox.margin>
+                </FontAwesomeIcon>
+                <Label alignment="TOP_LEFT" text="Beenden" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <styleClass>
+                        <String fx:value="label"/>
+                        <String fx:value="sidebar"/>
+                    </styleClass>
+                    <font>
+                        <Font size="17.0"/>
+                    </font>
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                    <HBox.margin>
+                        <Insets left="10.0" top="10.0"/>
+                    </HBox.margin>
+                </Label>
+            </HBox>
+
+        </VBox>
+    </left>
+    <center>
+        <Pane fx:id="mainPane" prefHeight="802.0" prefWidth="708.0" BorderPane.alignment="CENTER"/>
+    </center>
+</BorderPane>

@@ -9,12 +9,8 @@ public enum PersistenceManager {
     INSTANCE;
     private EntityManagerFactory emFactory;
 
-    private PersistenceManager() {
+    PersistenceManager() {
         this.emFactory = Persistence.createEntityManagerFactory("rechnungen-pu");
-    }
-
-    public void close() {
-        this.emFactory.close();
     }
 
     public EntityManager getEntityManager() {

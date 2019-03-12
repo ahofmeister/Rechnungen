@@ -4,7 +4,6 @@ import de.alexanderhofmeister.rechnungen.util.FxmlUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
-import javafx.util.Pair;
 
 public class MainController {
 
@@ -12,13 +11,19 @@ public class MainController {
     private Pane mainPane;
 
     public void switchToCustomerPane() {
-        Pair<Pane, Object> customerOverview = FxmlUtil.loadFxml(this, "customerOverview");
+        switchPane("customerOverview");
+    }
+
+    private void switchPane(String filename) {
         this.mainPane.getChildren().clear();
-        this.mainPane.getChildren().add(customerOverview.getKey());
+        this.mainPane.getChildren().add(FxmlUtil.loadFxml(this, filename).getKey());
     }
 
     public void exitApplication() {
         Platform.exit();
     }
 
+    public void switchToBillPane() {
+        switchPane("billOverview");
+    }
 }

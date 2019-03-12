@@ -3,7 +3,6 @@ package de.alexanderhofmeister.rechnungen.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,10 +12,13 @@ import java.util.List;
 @Setter
 @Entity
 @NoArgsConstructor
-@NamedQuery(name = Customer.NQ_LIST_ALL, query = "SELECT c FROM Customer c")
+@NamedQueries({
+        @NamedQuery(name = Customer.NQ_LIST_ALL, query = "SELECT c FROM Customer c"),
+        @NamedQuery(name = Customer.NQ_FIND_BY_COMPANY, query = "SELECT c FROM Customer c where c.company = :company")})
 public class Customer extends BaseEntity {
 
-    public static final String NQ_LIST_ALL = "customer.listall";
+    public static final String NQ_LIST_ALL = "customer.listAll";
+    public static final String NQ_FIND_BY_COMPANY = "customer.findByCompany";
 
     private static final long serialVersionUID = 1L;
 
@@ -50,8 +52,16 @@ public class Customer extends BaseEntity {
     @Label("Kontaktperson")
     private String contactPerson;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Bill> bills = new ArrayList<>();
+
     public String getAddress() {
         return street + " " + streetNumber + ", " + zipCode + " " + city;
+    }
+
+    @Override
+    public String toString() {
+        return company;
     }
 
 }

@@ -8,8 +8,7 @@
             xmlns="http://javafx.com/javafx/8.0.171"
             fx:controller="de.alexanderhofmeister.rechnungen.view.BillOverviewController">
     <Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="100" prefWidth="1350.0" styleClass="subheading">
-
-        <Label layoutX="15.0" layoutY="24.0" prefHeight="500.0" prefWidth="468.0" text="Rechnungen" textFill="#7c8184">
+        <Label layoutX="15.0" layoutY="24.0" prefHeight="43.0" prefWidth="468.0" text="Rechnungen" textFill="#7c8184">
             <font>
                 <Font size="36.0"/>
             </font>

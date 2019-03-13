@@ -50,7 +50,7 @@
                 </Label>
             </HBox>
             <HBox alignment="CENTER_LEFT" onMouseClicked="#switchToBillPane" prefHeight="50.0" styleClass="buttons">
-                <FontAwesomeIcon fill="#7c8184" iconName="USERS" HBox.hgrow="ALWAYS">
+                <FontAwesomeIcon fill="#7c8184" iconName="FILE_TEXT" HBox.hgrow="ALWAYS">
                     <HBox.margin>
                         <Insets left="10.0" top="10.0"/>
                     </HBox.margin>

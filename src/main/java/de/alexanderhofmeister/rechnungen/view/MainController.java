@@ -26,4 +26,8 @@ public class MainController {
     public void switchToBillPane() {
         switchPane("billOverview");
     }
+
+    public void switchToPropertiesPane() {
+        switchPane("viewProperties");
+    }
 }

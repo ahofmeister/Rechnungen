@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class MoneyUtil {
 
-    public static String format(final BigDecimal value) {
+    public static String toCurrencyWithSymbol(final BigDecimal value) {
         return String.format("%.2f €", value);
     }
 
@@ -16,4 +16,5 @@ public class MoneyUtil {
         }
         return new BigDecimal(value);
     }
+
 }

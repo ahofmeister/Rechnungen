@@ -1,9 +1,13 @@
 package de.alexanderhofmeister.rechnungen.view;
 
+import com.itextpdf.html2pdf.HtmlConverter;
 import de.alexanderhofmeister.rechnungen.model.Bill;
 import de.alexanderhofmeister.rechnungen.model.BusinessException;
+import de.alexanderhofmeister.rechnungen.model.Properties;
 import de.alexanderhofmeister.rechnungen.service.BillService;
+import de.alexanderhofmeister.rechnungen.util.DateUtil;
 import de.alexanderhofmeister.rechnungen.util.FxmlUtil;
+import de.alexanderhofmeister.rechnungen.util.MoneyUtil;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -20,9 +24,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.util.Pair;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
@@ -121,7 +135,40 @@ public class BillOverviewController implements Initializable {
                 deleteButton.getStyleClass().add("button");
                 deleteButton.setOnAction(event -> billService.delete(entity));
 
-                setGraphic(new HBox(15, editButton, deleteButton));
+                final Button exportAsPdf = new Button();
+                final FontAwesomeIcon pdfIcon = new FontAwesomeIcon();
+                pdfIcon.setIcon(FontAwesomeIconName.FILE);
+                exportAsPdf.setGraphic(pdfIcon);
+                exportAsPdf.getStyleClass().add("button");
+                exportAsPdf.setOnAction(event -> {
+
+                    final StringWriter stringWriter = new StringWriter();
+
+
+                    Map<String, Object> attributes = new HashMap<>();
+                    attributes.put("customer", entity.getCustomer());
+                    attributes.put("bill", entity);
+                    attributes.put("MoneyUtil", MoneyUtil.class);
+                    attributes.put("DateUtil", DateUtil.class);
+                    attributes.put("Properties", Properties.getInstance());
+                    final VelocityContext context = new VelocityContext(attributes);
+
+                    try {
+                        Velocity.evaluate(context, stringWriter, "PackageTemplatesVelocity",
+                                FileUtils.readFileToString(new File("./templates/bill.html"), StandardCharsets.ISO_8859_1));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        HtmlConverter.convertToPdf(stringWriter.toString(), new FileOutputStream("a.pdf"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                });
+
+                setGraphic(new HBox(15, editButton, deleteButton, exportAsPdf));
 
             }
         });

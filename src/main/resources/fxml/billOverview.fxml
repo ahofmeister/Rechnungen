@@ -8,20 +8,20 @@
             xmlns="http://javafx.com/javafx/8.0.171"
             fx:controller="de.alexanderhofmeister.rechnungen.view.BillOverviewController">
     <Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="100" prefWidth="1350.0" styleClass="subheading">
-        <Label layoutX="15.0" layoutY="24.0" prefHeight="43.0" prefWidth="468.0" text="Rechnungen" textFill="#7c8184">
+        <Label layoutX="15.0" layoutY="24.0" prefHeight="43.0" prefWidth="500.0" text="Rechnungen" textFill="#7c8184">
             <font>
                 <Font size="36.0"/>
             </font>
         </Label>
     </Pane>
     <TextField fx:id="filterField" layoutX="14.0" layoutY="134.0"/>
-    <TableView fx:id="billTable" layoutX="14.0" layoutY="186.0" prefHeight="500.0" prefWidth="450.0">
+    <TableView fx:id="billTable" layoutX="14.0" layoutY="186.0" prefHeight="575.0" prefWidth="500.0">
         <columns>
             <TableColumn fx:id="number" prefWidth="75.0" text="Nummer"/>
-            <TableColumn fx:id="customer" prefWidth="75.0" text="Kunde"/>
+            <TableColumn fx:id="customer" prefWidth="150.0" text="Kunde"/>
             <TableColumn fx:id="date" prefWidth="100.0" text="Datum"/>
             <TableColumn fx:id="total" prefWidth="100.0" text="Betrag"/>
-            <TableColumn fx:id="action" prefWidth="100.0" text="Aktionen"/>
+            <TableColumn fx:id="action" prefWidth="150.0" text="Aktionen"/>
         </columns>
     </TableView>
     <Button fx:id="newBill" layoutX="178.0" layoutY="134.0" mnemonicParsing="false" text="Neue Rechnung"/>

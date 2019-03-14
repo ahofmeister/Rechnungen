@@ -199,10 +199,10 @@ public class BillEditController implements Initializable {
         BigDecimal subtotal = amount.add(vat);
         BigDecimal sum = subtotal.add(MoneyUtil.convertToBigDecimal(postage.getText()));
 
-        this.amountTotal.setText(MoneyUtil.format(amount));
-        this.vat.setText(MoneyUtil.format(vat));
-        this.subTotal.setText(MoneyUtil.format(subtotal));
-        this.total.setText(MoneyUtil.format(sum));
+        this.amountTotal.setText(MoneyUtil.toCurrencyWithSymbol(amount));
+        this.vat.setText(MoneyUtil.toCurrencyWithSymbol(vat));
+        this.subTotal.setText(MoneyUtil.toCurrencyWithSymbol(subtotal));
+        this.total.setText(MoneyUtil.toCurrencyWithSymbol(sum));
     }
 
     int getNumber() {
@@ -226,7 +226,7 @@ public class BillEditController implements Initializable {
     }
 
     BigDecimal getAmount() {
-        return MoneyUtil.convertToBigDecimal(amount.getText());
+        return MoneyUtil.convertToBigDecimal(amountTotal.getText());
     }
 
     BigDecimal getVat() {

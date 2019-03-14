@@ -62,4 +62,9 @@ public class Bill extends BaseEntity {
     public String toString() {
         return "Rechnung Nr. " + number + " von " + this.customer;
     }
+
+    public BigDecimal getAmount() {
+        return this.entries.stream().map(BillEntry::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
 }

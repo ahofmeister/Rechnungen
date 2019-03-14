@@ -12,7 +12,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         final Scene scene = new Scene(FxmlUtil.loadFxml(this, "Main").getKey());
-        scene.getStylesheets().add("/css/bootstrap.css");
         scene.getStylesheets().add("/css/style.css");
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(scene);

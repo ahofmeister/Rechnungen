@@ -15,13 +15,13 @@
         </Label>
     </Pane>
     <TextField fx:id="filterField" layoutX="14.0" layoutY="134.0"/>
-    <TableView fx:id="billTable" layoutX="14.0" layoutY="186.0" prefHeight="575.0" prefWidth="500.0">
+    <TableView fx:id="billTable" layoutX="14.0" layoutY="186.0" prefHeight="675.0" prefWidth="675.0">
         <columns>
             <TableColumn fx:id="number" prefWidth="75.0" text="Nummer"/>
             <TableColumn fx:id="customer" prefWidth="150.0" text="Kunde"/>
             <TableColumn fx:id="date" prefWidth="100.0" text="Datum"/>
             <TableColumn fx:id="total" prefWidth="100.0" text="Betrag"/>
-            <TableColumn fx:id="action" prefWidth="150.0" text="Aktionen"/>
+            <TableColumn fx:id="action" prefWidth="250.0" text="Aktionen"/>
         </columns>
     </TableView>
     <Button fx:id="newBill" layoutX="178.0" layoutY="134.0" mnemonicParsing="false" text="Neue Rechnung"/>

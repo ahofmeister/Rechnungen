@@ -1,5 +1,6 @@
 package de.alexanderhofmeister.rechnungen.model;
 
+import de.alexanderhofmeister.rechnungen.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,7 +61,7 @@ public class Bill extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Rechnung Nr. " + number + " von " + this.customer;
+        return "Rechnung Nr. " + number + " vom " + DateUtil.formatToDisplayDate(this.date) + ".";
     }
 
     public BigDecimal getAmount() {

@@ -5,7 +5,7 @@ import de.alexanderhofmeister.rechnungen.model.BusinessException;
 import de.alexanderhofmeister.rechnungen.model.Properties;
 import de.alexanderhofmeister.rechnungen.service.BillService;
 import de.alexanderhofmeister.rechnungen.util.DateUtil;
-import de.alexanderhofmeister.rechnungen.util.FileUtil;
+import de.alexanderhofmeister.rechnungen.util.ExportUtil;
 import de.alexanderhofmeister.rechnungen.util.FxmlUtil;
 import de.alexanderhofmeister.rechnungen.util.MoneyUtil;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -26,6 +26,7 @@ import javafx.util.Pair;
 import lombok.Getter;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -142,10 +143,28 @@ public class BillOverviewController implements Initializable {
                 printIcon.setIcon(FontAwesomeIconName.PRINT);
                 printButton.setGraphic(printIcon);
                 printButton.getStyleClass().add("button");
-                printButton.setOnAction(event -> FileUtil.printFile(exportBill(entity)));
+                printButton.setOnAction(event -> ExportUtil.printFile(exportBill(entity)));
+
+                final Button emailButton = new Button();
+                final FontAwesomeIcon emailIcon = new FontAwesomeIcon();
+                emailIcon.setIcon(FontAwesomeIconName.SEND);
+                emailButton.setGraphic(emailIcon);
+                emailButton.getStyleClass().add("button");
+                emailButton.setOnAction(event -> {
+
+                    Map<String, Object> attributes = new HashMap<>();
+                    attributes.put("bill", entity);
+                    try {
+                        String body = ExportUtil.fillTemplateFromVariables("emailBill", attributes);
+                        ExportUtil.sendViaEmail(exportBill(entity), entity.toString(), body, entity.getCustomer().getEmail());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                });
 
 
-                setGraphic(new HBox(10, editButton, deleteButton, exportAsPdf, printButton));
+                setGraphic(new HBox(10, editButton, deleteButton, exportAsPdf, printButton, emailButton));
 
             }
         });
@@ -159,7 +178,7 @@ public class BillOverviewController implements Initializable {
         attributes.put("MoneyUtil", MoneyUtil.class);
         attributes.put("DateUtil", DateUtil.class);
         attributes.put("Properties", Properties.getInstance());
-        return FileUtil.createFileFromTemplate(entity.getDate(), new File(FileUtil.getFileNameBill(entity)), "bill", attributes);
+        return ExportUtil.createFileFromTemplate(entity.getDate(), new File(ExportUtil.getFileNameBill(entity)), "bill", attributes);
     }
 
 

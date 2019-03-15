@@ -43,4 +43,8 @@ public class Properties {
     public String getString(String key) {
         return this.propertiesConfiguration.getString(key);
     }
+
+    public int getInt(String key) {
+        return this.propertiesConfiguration.getInt(key);
+    }
 }

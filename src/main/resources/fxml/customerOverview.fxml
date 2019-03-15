@@ -14,7 +14,7 @@
             </font>
         </Label>
     </Pane>
-    <TextField fx:id="filterField" layoutX="14.0" layoutY="134.0"/>
+    <TextField fx:id="filterField" layoutX="14.0" layoutY="134.0" promptText="Suchen"/>
     <TableView fx:id="customerTable" layoutX="14.0" layoutY="186.0" prefHeight="500.0" prefWidth="550.0">
         <columns>
             <TableColumn fx:id="id" prefWidth="50.0" text="#"/>

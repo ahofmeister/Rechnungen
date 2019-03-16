@@ -77,7 +77,7 @@ public abstract class BaseEntity implements Serializable {
             }
         }
         if (!missingFields.isEmpty()) {
-            throw new BusinessException("Folgende Felder sind nicht ausgefüllt, aber notwendig:\n" + String.join(", ", missingFields));
+            throw new BusinessException("Folgende Felder sind nicht ausgefüllt, aber notwendig oder fehlerhaft:\n" + String.join(", ", missingFields));
         }
     }
 }

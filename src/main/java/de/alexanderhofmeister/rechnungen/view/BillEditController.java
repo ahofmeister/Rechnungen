@@ -160,11 +160,12 @@ public class BillEditController implements Initializable {
             } catch (NumberFormatException nfe) {
                 // Ignore: It is handled due to validate fields of the bill entry
             }
-
             try {
                 billEntry.validateFields();
                 this.billEntries.getItems().add(billEntry);
                 calculateAndSetSums();
+                this.position.clear();
+                this.period.setValue(null);
             } catch (BusinessException e1) {
                 errorLabel.setText(e1.getMessage());
             }

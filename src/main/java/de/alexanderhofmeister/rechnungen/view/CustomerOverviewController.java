@@ -3,9 +3,8 @@ package de.alexanderhofmeister.rechnungen.view;
 import de.alexanderhofmeister.rechnungen.model.BusinessException;
 import de.alexanderhofmeister.rechnungen.model.Customer;
 import de.alexanderhofmeister.rechnungen.service.CustomerService;
+import de.alexanderhofmeister.rechnungen.util.ButtonUtil;
 import de.alexanderhofmeister.rechnungen.util.FxmlUtil;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -103,19 +102,8 @@ public class CustomerOverviewController implements Initializable {
                     setGraphic(null);
                     return;
                 }
-                final Button editButton = new Button();
-                final FontAwesomeIcon editIcon = new FontAwesomeIcon();
-                editIcon.setIcon(FontAwesomeIconName.EDIT);
-                editButton.setGraphic(editIcon);
-                editButton.getStyleClass().add("button");
-                editButton.setOnAction(event -> loadCustomerEdit(entity));
-
-                final Button deleteButton = new Button();
-                final FontAwesomeIcon deleteIcon = new FontAwesomeIcon();
-                deleteIcon.setIcon(FontAwesomeIconName.TRASH);
-                deleteButton.setGraphic(deleteIcon);
-                deleteButton.getStyleClass().add("button");
-                deleteButton.setOnAction(event -> {
+                final Button editButton = ButtonUtil.createEditButton(event -> loadCustomerEdit(entity));
+                final Button deleteButton = ButtonUtil.createDeleteButton(event -> {
                     customerService.delete(entity);
                     initTable();
                 });

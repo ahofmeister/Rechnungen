@@ -4,11 +4,7 @@ import de.alexanderhofmeister.rechnungen.model.Bill;
 import de.alexanderhofmeister.rechnungen.model.BusinessException;
 import de.alexanderhofmeister.rechnungen.model.Properties;
 import de.alexanderhofmeister.rechnungen.service.BillService;
-import de.alexanderhofmeister.rechnungen.util.DateUtil;
-import de.alexanderhofmeister.rechnungen.util.ExportUtil;
-import de.alexanderhofmeister.rechnungen.util.FxmlUtil;
-import de.alexanderhofmeister.rechnungen.util.MoneyUtil;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.alexanderhofmeister.rechnungen.util.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -118,43 +114,18 @@ public class BillOverviewController implements Initializable {
                     setGraphic(null);
                     return;
                 }
-                final Button editButton = new Button();
-                final FontAwesomeIcon editIcon = new FontAwesomeIcon();
-                editIcon.setIcon(FontAwesomeIconName.EDIT);
-                editButton.setGraphic(editIcon);
-                editButton.getStyleClass().add("button");
-                editButton.setOnAction(event -> loadBillEdit(bill));
-
-                final Button deleteButton = new Button();
-                final FontAwesomeIcon deleteIcon = new FontAwesomeIcon();
-                deleteIcon.setIcon(FontAwesomeIconName.TRASH);
-                deleteButton.setGraphic(deleteIcon);
-                deleteButton.getStyleClass().add("button");
-                deleteButton.setOnAction(event -> {
+                final Button editButton = ButtonUtil.createEditButton(event -> loadBillEdit(bill));
+                final Button deleteButton = ButtonUtil.createDeleteButton(event -> {
                     billService.delete(bill);
                     initTable();
                 });
 
-                final Button exportAsPdf = new Button();
-                final FontAwesomeIcon pdfIcon = new FontAwesomeIcon();
-                pdfIcon.setIcon(FontAwesomeIconName.FILE);
-                exportAsPdf.setGraphic(pdfIcon);
-                exportAsPdf.getStyleClass().add("button");
-                exportAsPdf.setOnAction(event -> exportBill(bill));
+                final Button exportAsPdf = ButtonUtil.createIconButton(event -> exportBill(bill), FontAwesomeIconName.
+                        FILE, "Speichern");
+                final Button printButton = ButtonUtil.createIconButton(event1 -> ExportUtil.printFile(exportBill(bill)), FontAwesomeIconName.PRINT, "Drucken");
 
-                final Button printButton = new Button();
-                final FontAwesomeIcon printIcon = new FontAwesomeIcon();
-                printIcon.setIcon(FontAwesomeIconName.PRINT);
-                printButton.setGraphic(printIcon);
-                printButton.getStyleClass().add("button");
-                printButton.setOnAction(event -> ExportUtil.printFile(exportBill(bill)));
 
-                final Button emailButton = new Button();
-                final FontAwesomeIcon emailIcon = new FontAwesomeIcon();
-                emailIcon.setIcon(FontAwesomeIconName.SEND);
-                emailButton.setGraphic(emailIcon);
-                emailButton.getStyleClass().add("button");
-                emailButton.setOnAction(event -> {
+                final Button emailButton = ButtonUtil.createIconButton(event -> {
 
                     Map<String, Object> attributes = new HashMap<>();
                     attributes.put("bill", bill);
@@ -165,7 +136,7 @@ public class BillOverviewController implements Initializable {
                         e.printStackTrace();
                     }
 
-                });
+                }, FontAwesomeIconName.SEND, "Als E-Mail senden");
 
 
                 setGraphic(new HBox(10, editButton, deleteButton, exportAsPdf, printButton, emailButton));

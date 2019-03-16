@@ -1,21 +1,19 @@
 package de.alexanderhofmeister.rechnungen.service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import de.alexanderhofmeister.rechnungen.model.BaseEntity;
+import de.alexanderhofmeister.rechnungen.model.BusinessException;
+import lombok.Getter;
+import org.hibernate.exception.ConstraintViolationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import de.alexanderhofmeister.rechnungen.model.BaseEntity;
-import de.alexanderhofmeister.rechnungen.model.BusinessException;
-import org.hibernate.exception.ConstraintViolationException;
-
-import lombok.Getter;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 
 public class AbstractEntityService<E extends BaseEntity> {
@@ -51,6 +49,7 @@ public class AbstractEntityService<E extends BaseEntity> {
         this.em.remove(this.em.merge(entity));
         this.em.flush();
         this.em.getTransaction().commit();
+        this.em.clear();
     }
 
     public E find(final E entity) {

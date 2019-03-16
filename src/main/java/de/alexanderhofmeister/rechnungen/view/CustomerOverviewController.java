@@ -23,7 +23,6 @@ import javafx.util.Pair;
 import lombok.Getter;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
@@ -55,6 +54,10 @@ public class CustomerOverviewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initTable();
+    }
+
+    private void initTable() {
         final ObservableList<Customer> allCustomer = FXCollections.observableArrayList(this.customerService.listAll());
 
         final FilteredList<Customer> filteredData = new FilteredList<>(allCustomer);
@@ -112,13 +115,15 @@ public class CustomerOverviewController implements Initializable {
                 deleteIcon.setIcon(FontAwesomeIconName.TRASH);
                 deleteButton.setGraphic(deleteIcon);
                 deleteButton.getStyleClass().add("button");
-                deleteButton.setOnAction(event -> CustomerOverviewController.this.customerService.delete(entity));
+                deleteButton.setOnAction(event -> {
+                    customerService.delete(entity);
+                    initTable();
+                });
 
                 setGraphic(new HBox(15, editButton, deleteButton));
 
             }
         });
-
     }
 
     private void loadCustomerEdit(Customer customer) {

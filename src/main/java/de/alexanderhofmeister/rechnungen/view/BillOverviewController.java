@@ -66,8 +66,10 @@ public class BillOverviewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        initTable();
+    }
 
-
+    private void initTable() {
         final ObservableList<Bill> allBills = FXCollections.observableArrayList(this.billService.listAll());
 
         final FilteredList<Bill> filteredData = new FilteredList<>(allBills);
@@ -109,10 +111,10 @@ public class BillOverviewController implements Initializable {
         this.action.setCellFactory(param -> new TableCell<Bill, Bill>() {
 
             @Override
-            protected void updateItem(final Bill entity, final boolean empty) {
-                super.updateItem(entity, empty);
+            protected void updateItem(final Bill bill, final boolean empty) {
+                super.updateItem(bill, empty);
 
-                if (entity == null) {
+                if (bill == null) {
                     setGraphic(null);
                     return;
                 }
@@ -121,30 +123,31 @@ public class BillOverviewController implements Initializable {
                 editIcon.setIcon(FontAwesomeIconName.EDIT);
                 editButton.setGraphic(editIcon);
                 editButton.getStyleClass().add("button");
-                editButton.setOnAction(event -> loadBillEdit(entity));
+                editButton.setOnAction(event -> loadBillEdit(bill));
 
                 final Button deleteButton = new Button();
                 final FontAwesomeIcon deleteIcon = new FontAwesomeIcon();
                 deleteIcon.setIcon(FontAwesomeIconName.TRASH);
                 deleteButton.setGraphic(deleteIcon);
                 deleteButton.getStyleClass().add("button");
-                deleteButton.setOnAction(event -> billService.delete(entity));
+                deleteButton.setOnAction(event -> {
+                    billService.delete(bill);
+                    initTable();
+                });
 
                 final Button exportAsPdf = new Button();
                 final FontAwesomeIcon pdfIcon = new FontAwesomeIcon();
                 pdfIcon.setIcon(FontAwesomeIconName.FILE);
                 exportAsPdf.setGraphic(pdfIcon);
                 exportAsPdf.getStyleClass().add("button");
-                exportAsPdf.setOnAction(event -> {
-                    exportBill(entity);
-                });
+                exportAsPdf.setOnAction(event -> exportBill(bill));
 
                 final Button printButton = new Button();
                 final FontAwesomeIcon printIcon = new FontAwesomeIcon();
                 printIcon.setIcon(FontAwesomeIconName.PRINT);
                 printButton.setGraphic(printIcon);
                 printButton.getStyleClass().add("button");
-                printButton.setOnAction(event -> ExportUtil.printFile(exportBill(entity)));
+                printButton.setOnAction(event -> ExportUtil.printFile(exportBill(bill)));
 
                 final Button emailButton = new Button();
                 final FontAwesomeIcon emailIcon = new FontAwesomeIcon();
@@ -154,10 +157,10 @@ public class BillOverviewController implements Initializable {
                 emailButton.setOnAction(event -> {
 
                     Map<String, Object> attributes = new HashMap<>();
-                    attributes.put("bill", entity);
+                    attributes.put("bill", bill);
                     try {
                         String body = ExportUtil.fillTemplateFromVariables("emailBill", attributes);
-                        ExportUtil.sendViaEmail(exportBill(entity), entity.toString(), body, entity.getCustomer().getEmail());
+                        ExportUtil.sendViaEmail(exportBill(bill), bill.toString(), body, bill.getCustomer().getEmail());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -169,7 +172,6 @@ public class BillOverviewController implements Initializable {
 
             }
         });
-
     }
 
     private File exportBill(Bill entity) {
@@ -215,6 +217,7 @@ public class BillOverviewController implements Initializable {
                 bill.setTotal(controller.getTotal());
                 bill.setEntries(controller.getBillEntries());
                 this.billService.update(bill);
+                initTable();
             } catch (BusinessException e) {
                 ae.consume();
                 controller.setErrorText(e.getMessage());

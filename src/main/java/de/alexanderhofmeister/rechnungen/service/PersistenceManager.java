@@ -16,4 +16,5 @@ public enum PersistenceManager {
     public EntityManager getEntityManager() {
         return this.emFactory.createEntityManager();
     }
+
 }

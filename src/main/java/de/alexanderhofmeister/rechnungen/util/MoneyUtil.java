@@ -10,11 +10,15 @@ public class MoneyUtil {
 
 
     public static BigDecimal convertToBigDecimal(String value) {
-        value = value.replaceAll(",", ".").replaceAll("€", "").trim();
+        value = convertToGermanCurrency(value);
         if (value.isEmpty()) {
             return BigDecimal.ZERO;
         }
         return new BigDecimal(value);
+    }
+
+    public static String convertToGermanCurrency(String value) {
+        return value.replaceAll(",", ".").replaceAll("€", "").trim();
     }
 
 }

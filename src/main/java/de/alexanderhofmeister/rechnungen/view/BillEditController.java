@@ -2,6 +2,7 @@ package de.alexanderhofmeister.rechnungen.view;
 
 import de.alexanderhofmeister.rechnungen.model.Bill;
 import de.alexanderhofmeister.rechnungen.model.BillEntry;
+import de.alexanderhofmeister.rechnungen.model.BusinessException;
 import de.alexanderhofmeister.rechnungen.model.Customer;
 import de.alexanderhofmeister.rechnungen.service.CustomerService;
 import de.alexanderhofmeister.rechnungen.util.MoneyUtil;
@@ -154,9 +155,20 @@ public class BillEditController implements Initializable {
             BillEntry billEntry = new BillEntry(bill);
             billEntry.setPosition(position.getText());
             billEntry.setPeriod(period.getValue());
-            billEntry.setAmount(new BigDecimal(amount.getText()));
-            this.billEntries.getItems().add(billEntry);
-            calculateAndSetSums();
+            try {
+                billEntry.setAmount(new BigDecimal(MoneyUtil.convertToGermanCurrency(amount.getText())));
+            } catch (NumberFormatException nfe) {
+                // Ignore: It is handled due to validate fields of the bill entry
+            }
+
+            try {
+                billEntry.validateFields();
+                this.billEntries.getItems().add(billEntry);
+                calculateAndSetSums();
+            } catch (BusinessException e1) {
+                errorLabel.setText(e1.getMessage());
+            }
+
         });
 
 

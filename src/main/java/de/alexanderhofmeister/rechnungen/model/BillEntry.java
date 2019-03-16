@@ -22,11 +22,13 @@ public class BillEntry extends BaseEntity {
 
     public static final String NQ_LIST_ALL_BY_BILL = "billentry.listallbybill";
     private static final long serialVersionUID = 1L;
+
     @Required
     @Label("Position")
     private String position;
 
     @Label("Zeitraum")
+    @Required
     private LocalDate period = LocalDate.now();
 
     @Required
@@ -34,6 +36,8 @@ public class BillEntry extends BaseEntity {
     private BigDecimal amount;
 
     @ManyToOne
+    @Required
+    @Label("Rechnung")
     private Bill bill;
 
     public BillEntry(@NonNull Bill bill) {

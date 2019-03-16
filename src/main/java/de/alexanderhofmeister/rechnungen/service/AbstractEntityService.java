@@ -139,7 +139,7 @@ public class AbstractEntityService<E extends BaseEntity> {
 
     public E update(final E entity) throws BusinessException {
         E result;
-        entity.checkMissingFields();
+        entity.validateFields();
         this.em.getTransaction().begin();
 
         if (entity.isNew()) {

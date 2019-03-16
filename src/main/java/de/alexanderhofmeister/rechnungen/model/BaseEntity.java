@@ -45,7 +45,7 @@ public abstract class BaseEntity implements Serializable {
         return this.getId().equals(other.getId()) || (this.getId() != null && id.equals(other.id));
     }
 
-    public void checkMissingFields() throws BusinessException {
+    public void validateFields() throws BusinessException {
 
         List<String> missingFields = new ArrayList<>();
 

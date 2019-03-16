@@ -53,6 +53,8 @@ public class Bill extends BaseEntity {
     private BigDecimal total;
 
     @ManyToOne
+    @Required
+    @Label("Kunde")
     private Customer customer;
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)

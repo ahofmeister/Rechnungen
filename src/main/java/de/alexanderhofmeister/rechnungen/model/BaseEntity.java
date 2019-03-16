@@ -57,7 +57,7 @@ public abstract class BaseEntity implements Serializable {
                 try {
                     value = field.get(this);
                 } catch (IllegalAccessException e) {
-                    // should happen
+                    // should not happen
                 }
                 if (typeOfField == boolean.class && Boolean.FALSE.equals(value)
                         || typeOfField.isPrimitive() && ((Number) value).doubleValue() <= 0

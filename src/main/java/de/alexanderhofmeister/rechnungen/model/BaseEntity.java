@@ -42,7 +42,11 @@ public abstract class BaseEntity implements Serializable {
         }
 
         final BaseEntity other = (BaseEntity) object;
-        return this.getId().equals(other.getId()) || (this.getId() != null && id.equals(other.id));
+
+        if (this.getId() == null || other.getId() == null) {
+            return false;
+        }
+        return this.id.equals(other.getId());
     }
 
     public void validateFields() throws BusinessException {

@@ -121,7 +121,7 @@ public class BillOverviewController implements Initializable {
                 });
 
                 final Button exportAsPdf = ButtonUtil.createIconButton(event -> exportBill(bill), FontAwesomeIconName.
-                        FILE, "Speichern");
+                        SAVE, "Speichern");
                 final Button printButton = ButtonUtil.createIconButton(event1 -> ExportUtil.printFile(exportBill(bill)), FontAwesomeIconName.PRINT, "Drucken");
 
 

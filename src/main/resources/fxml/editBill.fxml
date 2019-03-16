@@ -123,7 +123,7 @@
             </HBox>
 
 
-            <HBox fillHeight="false">
+            <HBox fillHeight="false" spacing="10">
                 <children>
                     <TextField fx:id="position" promptText="Postion"/>
                     <DatePicker fx:id="period" promptText="Datum"/>

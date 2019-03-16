@@ -11,6 +11,7 @@ import de.alexanderhofmeister.rechnungen.util.MoneyUtil;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -28,7 +29,6 @@ import lombok.Getter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -50,7 +50,7 @@ public class BillOverviewController implements Initializable {
     private TableColumn<Bill, String> total;
 
     @FXML
-    private TableColumn<Bill, LocalDate> date;
+    private TableColumn<Bill, String> date;
 
     @FXML
     private TableColumn<Bill, Bill> action;
@@ -89,7 +89,8 @@ public class BillOverviewController implements Initializable {
         this.billTable.setItems(sortedData);
         this.number.setCellValueFactory(new PropertyValueFactory<>("number"));
         this.customer.setCellValueFactory(new PropertyValueFactory<>("customer"));
-        this.date.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+        this.date.setCellValueFactory(tableCell -> new SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().getDate())));
         this.total.setCellValueFactory(new PropertyValueFactory<>("total"));
         this.newBill.setOnAction(e -> loadBillEdit(new Bill()));
 

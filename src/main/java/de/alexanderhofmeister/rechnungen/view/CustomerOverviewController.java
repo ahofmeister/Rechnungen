@@ -1,10 +1,13 @@
 package de.alexanderhofmeister.rechnungen.view;
 
+import de.alexanderhofmeister.rechnungen.model.Bill;
 import de.alexanderhofmeister.rechnungen.model.BusinessException;
 import de.alexanderhofmeister.rechnungen.model.Customer;
+import de.alexanderhofmeister.rechnungen.service.BillService;
 import de.alexanderhofmeister.rechnungen.service.CustomerService;
 import de.alexanderhofmeister.rechnungen.util.ButtonUtil;
 import de.alexanderhofmeister.rechnungen.util.FxmlUtil;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -108,7 +111,14 @@ public class CustomerOverviewController implements Initializable {
                     initTable();
                 });
 
-                setGraphic(new HBox(15, editButton, deleteButton));
+                final Button createBillButton = ButtonUtil.createIconButton(event -> {
+                    Bill bill = new Bill();
+                    bill.setCustomer(entity);
+                    BillOverviewController.createBillView(bill, this, new BillService(), () -> {
+                    });
+                }, FontAwesomeIconName.MONEY, "Rechnung erstellen");
+
+                setGraphic(new HBox(10, editButton, deleteButton, createBillButton));
 
             }
         });

@@ -65,6 +65,55 @@ public class BillOverviewController implements Initializable {
         initTable();
     }
 
+    public static void createBillView(Bill bill, Object caller, BillService billService, Runnable afterSaveAction) {
+        Dialog<Bill> dialog = new Dialog<>();
+
+        dialog.setHeaderText(bill.isNew() ? "Neuer Rechnung" : "Rechnung " + bill.getNumber() +
+                " für " + bill.getCustomer().getCompany() + " bearbeiten");
+        Pair<Pane, Object> eventNew = FxmlUtil.loadFxml(caller, "editBill");
+        BillEditController controller = (BillEditController) eventNew.getValue();
+        controller.setBill(bill);
+
+
+        ButtonType createType = new ButtonType(bill.isNew() ? "Erstellen" : "Speichern", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(createType, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(eventNew.getKey());
+
+
+        dialog.show();
+        final Button createBillType = (Button) dialog.getDialogPane().lookupButton(createType);
+        createBillType.addEventFilter(ActionEvent.ACTION, ae -> {
+
+            try {
+                bill.setNumber(controller.getNumber());
+                bill.setDate(controller.getDate());
+                bill.setCustomer(controller.getCustomer());
+                bill.setAmount(controller.getAmount());
+                bill.setVat(controller.getVat());
+                bill.setSubtotal(controller.getSubTotal());
+                bill.setPostage(controller.getPostage());
+                bill.setTotal(controller.getTotal());
+                bill.setEntries(controller.getBillEntries());
+                billService.update(bill);
+                afterSaveAction.run();
+            } catch (BusinessException e) {
+                ae.consume();
+                controller.setErrorText(e.getMessage());
+            }
+
+        });
+    }
+
+    private File exportBill(Bill entity) {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("customer", entity.getCustomer());
+        attributes.put("bill", entity);
+        attributes.put("MoneyUtil", MoneyUtil.class);
+        attributes.put("DateUtil", DateUtil.class);
+        attributes.put("Properties", Properties.getInstance());
+        return ExportUtil.createFileFromTemplate(entity.getDate(), new File(ExportUtil.getFileNameBill(entity)), "bill", attributes);
+    }
+
     private void initTable() {
         final ObservableList<Bill> allBills = FXCollections.observableArrayList(this.billService.listAll());
 
@@ -90,13 +139,13 @@ public class BillOverviewController implements Initializable {
 
         this.date.setCellValueFactory(tableCell -> new SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().getDate())));
         this.total.setCellValueFactory(new PropertyValueFactory<>("total"));
-        this.newBill.setOnAction(e -> loadBillEdit(new Bill()));
+        this.newBill.setOnAction(e -> createBillView(new Bill(), this, this.billService, () -> initTable()));
 
         billTable.setRowFactory(tv -> {
             final TableRow<Bill> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    loadBillEdit(row.getItem());
+                    createBillView(row.getItem(), this, this.billService, () -> initTable());
                 }
             });
             return row;
@@ -114,7 +163,7 @@ public class BillOverviewController implements Initializable {
                     setGraphic(null);
                     return;
                 }
-                final Button editButton = ButtonUtil.createEditButton(event -> loadBillEdit(bill));
+                final Button editButton = ButtonUtil.createEditButton(event -> createBillView(bill, BillOverviewController.this, BillOverviewController.this.billService, () -> initTable()));
                 final Button deleteButton = ButtonUtil.createDeleteButton(event -> {
                     billService.delete(bill);
                     initTable();
@@ -143,58 +192,5 @@ public class BillOverviewController implements Initializable {
 
             }
         });
-    }
-
-    private File exportBill(Bill entity) {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("customer", entity.getCustomer());
-        attributes.put("bill", entity);
-        attributes.put("MoneyUtil", MoneyUtil.class);
-        attributes.put("DateUtil", DateUtil.class);
-        attributes.put("Properties", Properties.getInstance());
-        return ExportUtil.createFileFromTemplate(entity.getDate(), new File(ExportUtil.getFileNameBill(entity)), "bill", attributes);
-    }
-
-
-    private void loadBillEdit(Bill bill) {
-
-        Dialog<Bill> dialog = new Dialog<>();
-
-        dialog.setHeaderText(bill.isNew() ? "Neuer Rechnung" : "Rechnung " + bill.getNumber() +
-                " für " + bill.getCustomer().getCompany() + " bearbeiten");
-
-        Pair<Pane, Object> eventNew = FxmlUtil.loadFxml(this, "editBill");
-        BillEditController controller = (BillEditController) eventNew.getValue();
-        controller.setBill(bill);
-
-
-        ButtonType createType = new ButtonType(bill.isNew() ? "Erstellen" : "Speichern", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(createType, ButtonType.CANCEL);
-        dialog.getDialogPane().setContent(eventNew.getKey());
-
-
-        dialog.show();
-        final Button createBillType = (Button) dialog.getDialogPane().lookupButton(createType);
-        createBillType.addEventFilter(ActionEvent.ACTION, ae -> {
-
-            try {
-                bill.setNumber(controller.getNumber());
-                bill.setDate(controller.getDate());
-                bill.setCustomer(controller.getCustomer());
-                bill.setAmount(controller.getAmount());
-                bill.setVat(controller.getVat());
-                bill.setSubtotal(controller.getSubTotal());
-                bill.setPostage(controller.getPostage());
-                bill.setTotal(controller.getTotal());
-                bill.setEntries(controller.getBillEntries());
-                this.billService.update(bill);
-                initTable();
-            } catch (BusinessException e) {
-                ae.consume();
-                controller.setErrorText(e.getMessage());
-            }
-
-        });
-
     }
 }

@@ -15,12 +15,12 @@
         </Label>
     </Pane>
     <TextField fx:id="filterField" layoutX="14.0" layoutY="134.0" promptText="Suchen"/>
-    <TableView fx:id="customerTable" layoutX="14.0" layoutY="186.0" prefHeight="500.0" prefWidth="550.0">
+    <TableView fx:id="customerTable" layoutX="14.0" layoutY="186.0" prefHeight="500.0" prefWidth="600.0">
         <columns>
             <TableColumn fx:id="id" prefWidth="50.0" text="#"/>
             <TableColumn fx:id="name" prefWidth="150.0" text="Name"/>
             <TableColumn fx:id="address" prefWidth="250.0" text="Anschrift"/>
-            <TableColumn fx:id="action" prefWidth="100" text="Aktionen"/>
+            <TableColumn fx:id="action" prefWidth="150" text="Aktionen"/>
         </columns>
     </TableView>
     <Button fx:id="newCustomer" layoutX="178.0" layoutY="134.0" mnemonicParsing="false" text="Neuer Kunde"/>

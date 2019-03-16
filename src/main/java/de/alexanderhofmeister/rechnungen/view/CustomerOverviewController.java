@@ -155,6 +155,7 @@ public class CustomerOverviewController implements Initializable {
                 customer.setEmail(controller.getEmail());
                 customer.setContactPerson(controller.getContactPerson());
                 this.customerService.update(customer);
+                initTable();
             } catch (BusinessException e) {
                 ae.consume();
                 controller.setErrorText(e.getMessage());

@@ -17,11 +17,7 @@ public class FxmlUtil {
      * @return the found root pane and the controller as pair or @{code null}, if an exception occured
      */
     public static Pair<Pane, Object> loadFxml(Object caller, String filename) {
-        final FXMLLoader loader = new FXMLLoader();
-        Class<?> callerClass = caller.getClass();
-        ClassLoader classLoader = callerClass.getClassLoader();
-        loader.setClassLoader(classLoader);
-        loader.setLocation(classLoader.getResource("fxml/" + filename + ".fxml"));
+        final FXMLLoader loader = new FXMLLoader(caller.getClass().getClassLoader().getResource("fxml/" + filename + ".fxml"));
         try {
             return new Pair<>(loader.load(), loader.getController());
         } catch (IOException ex) {

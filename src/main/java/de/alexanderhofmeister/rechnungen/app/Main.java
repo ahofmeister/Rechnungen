@@ -11,7 +11,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        final Scene scene = new Scene(FxmlUtil.loadFxml(this, "Main").getKey());
+        final Scene scene = new Scene(FxmlUtil.loadFxml(this, "main").getKey());
         scene.getStylesheets().add("/css/style.css");
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(scene);

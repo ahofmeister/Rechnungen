@@ -83,18 +83,18 @@ public class ExportUtil {
 
         MultiPartEmail email = new MultiPartEmail();
 
-        email.setHostName(instance.getString("mail_server"));
-        email.setSmtpPort(instance.getInt("mail_port"));
-        String sender = instance.getString("email");
+        email.setHostName(instance.getString("Mail-Server"));
+        email.setSmtpPort(instance.getInt("Mail-Port"));
+        String sender = instance.getString("E-Mail");
         email.setAuthenticator(
                 new DefaultAuthenticator(sender,
-                        instance.getString("password")));
+                        instance.getString("Passwort")));
         email.setSSLOnConnect(true);
 
         email.setSubject(subject);
         try {
             email.addPart(body, "text/html; charset=UTF-8");
-            email.setFrom(instance.getString("username") + " <" + sender + ">");
+            email.setFrom(instance.getString("Benutzername") + " <" + sender + ">");
             email.addTo(to);
             email.attach(attachment);
             email.send();

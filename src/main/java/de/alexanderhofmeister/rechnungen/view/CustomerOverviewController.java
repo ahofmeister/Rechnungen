@@ -11,14 +11,13 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.util.Pair;
@@ -26,7 +25,6 @@ import lombok.Getter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 public class CustomerOverviewController implements Initializable {
 
@@ -35,56 +33,36 @@ public class CustomerOverviewController implements Initializable {
     private TableView<Customer> customerTable;
 
     @FXML
-    private TableColumn<Customer, String> name;
-
-    @FXML
-    private TableColumn<Customer, String> id;
-
-    @FXML
-    private TableColumn<Customer, String> address;
-
-    @FXML
-    private TableColumn<Customer, Customer> action;
-
-    @FXML
     private TextField filterField;
+
+    private final static int ROWS_PER_PAGE = 10;
+
+    final static private int CUSTOMER_SIZE = new CustomerService().countAll();
 
     @FXML
     private Button newCustomer;
+
+    @FXML
+    private Pagination pagination;
 
     private CustomerService customerService = new CustomerService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         initTable();
+        this.newCustomer.setOnAction(e -> loadCustomerEdit(new Customer()));
+        pagination.setPageFactory(this::createPage);
+        pagination.setPageCount((int) Math.ceil(CUSTOMER_SIZE / (ROWS_PER_PAGE)));
+        pagination.setCurrentPageIndex(0);
     }
 
     private void initTable() {
-        final ObservableList<Customer> allCustomer = FXCollections.observableArrayList(this.customerService.listAll());
+        this.customerTable = new TableView<>();
+        this.customerTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        this.customerTable.setPrefSize(600, 500);
 
-        final FilteredList<Customer> filteredData = new FilteredList<>(allCustomer);
-
-        this.filterField.textProperty().addListener((observable, oldValue, newValue) -> filteredData.setPredicate(myObject -> {
-            if (newValue == null || newValue.isEmpty()) {
-                return true;
-            }
-            return Stream.of(myObject.getCompany(), myObject.getCompanyAddition(), String.valueOf(myObject.getId()))
-                    .map(String::toLowerCase).anyMatch((filterValue -> filterValue.contains(newValue.toLowerCase())));
-
-        }));
-
-        final SortedList<Customer> sortedData = new SortedList<>(filteredData);
-
-        sortedData.comparatorProperty().bind(this.customerTable.comparatorProperty());
-
-        this.customerTable.setItems(sortedData);
-        this.id.setCellValueFactory(new PropertyValueFactory<>("id"));
-        this.name.setCellValueFactory(new PropertyValueFactory<>("company"));
-        this.address.setCellValueFactory(tableCell -> new SimpleStringProperty(tableCell.getValue().getAddress()));
-        this.newCustomer.setOnAction(e -> loadCustomerEdit(new Customer()));
-
-
-        customerTable.setRowFactory(tv -> {
+        this.customerTable.setRowFactory(tv -> {
             final TableRow<Customer> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
@@ -93,27 +71,51 @@ public class CustomerOverviewController implements Initializable {
             });
             return row;
         });
+        createColumns();
+    }
 
-        this.action.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-        this.action.setCellFactory(param -> new TableCell<Customer, Customer>() {
+    private void createColumns() {
+        TableColumn<Customer, String> id = new TableColumn<>("#");
+        id.setPrefWidth(50);
+
+        TableColumn<Customer, String> name = new TableColumn<>("Kunde");
+        name.setPrefWidth(150);
+
+        TableColumn<Customer, String> address = new TableColumn<>("Anschrift");
+        address.setPrefWidth(250);
+
+        TableColumn<Customer, Customer> action = new TableColumn<>("Aktionen");
+        action.setPrefWidth(150);
+
+        this.customerTable.getColumns().add(id);
+        this.customerTable.getColumns().add(name);
+        this.customerTable.getColumns().add(address);
+        this.customerTable.getColumns().add(action);
+
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        name.setCellValueFactory(new PropertyValueFactory<>("company"));
+        address.setCellValueFactory(tableCell -> new SimpleStringProperty(tableCell.getValue().getAddress()));
+
+        action.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        action.setCellFactory(param -> new TableCell<Customer, Customer>() {
 
             @Override
-            protected void updateItem(final Customer entity, final boolean empty) {
-                super.updateItem(entity, empty);
+            protected void updateItem(final Customer customer, final boolean empty) {
+                super.updateItem(customer, empty);
 
-                if (entity == null) {
+                if (customer == null) {
                     setGraphic(null);
                     return;
                 }
-                final Button editButton = ButtonUtil.createEditButton(event -> loadCustomerEdit(entity));
+                final Button editButton = ButtonUtil.createEditButton(event -> loadCustomerEdit(customer));
                 final Button deleteButton = ButtonUtil.createDeleteButton(event -> {
-                    customerService.delete(entity);
+                    customerService.delete(customer);
                     initTable();
                 });
 
                 final Button createBillButton = ButtonUtil.createIconButton(event -> {
                     Bill bill = new Bill();
-                    bill.setCustomer(entity);
+                    bill.setCustomer(customer);
                     BillOverviewController.createBillView(bill, this, new BillService(), () -> {
                     });
                 }, FontAwesomeIconName.MONEY, "Rechnung erstellen");
@@ -161,5 +163,10 @@ public class CustomerOverviewController implements Initializable {
 
         });
 
+    }
+
+    private Node createPage(int pageIndex) {
+        this.customerTable.setItems(FXCollections.observableArrayList(customerService.listAll(pageIndex * ROWS_PER_PAGE, Math.min(ROWS_PER_PAGE, CUSTOMER_SIZE))));
+        return new BorderPane(this.customerTable);
     }
 }

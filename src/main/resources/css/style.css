@@ -102,3 +102,15 @@
 	-fx-background-color: #ea123a;
 	-fx-font-weight: bold;
 }
+
+.pagination > .pagination-control > .control-box > .number-button{
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-min-width: 30;
+    -fx-min-height: 30;
+}
+.pagination > .pagination-control > .control-box > .number-button:hover,
+.pagination > .pagination-control > .control-box > .bullet-button:hover{
+    -fx-background-insets: 0;
+    -fx-background-color: lightgray;
+}

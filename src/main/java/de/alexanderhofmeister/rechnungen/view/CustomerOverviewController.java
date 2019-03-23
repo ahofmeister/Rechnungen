@@ -11,6 +11,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,6 +44,9 @@ public class CustomerOverviewController implements Initializable {
     private Pagination pagination;
 
     private CustomerService customerService = new CustomerService();
+
+    @FXML
+    private Label hitCount;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -166,7 +170,9 @@ public class CustomerOverviewController implements Initializable {
     }
 
     private Node createPage(int pageIndex) {
-        this.customerTable.setItems(FXCollections.observableArrayList(customerService.listAll(pageIndex * ROWS_PER_PAGE, Math.min(ROWS_PER_PAGE, CUSTOMER_SIZE))));
+        ObservableList<Customer> foundCustomer = FXCollections.observableArrayList(customerService.listAll(pageIndex * ROWS_PER_PAGE, Math.min(ROWS_PER_PAGE, CUSTOMER_SIZE)));
+        this.customerTable.setItems(foundCustomer);
+        this.hitCount.setText(String.format("Es wurden %s Kunden gefunden", CUSTOMER_SIZE));
         return new BorderPane(this.customerTable);
     }
 }

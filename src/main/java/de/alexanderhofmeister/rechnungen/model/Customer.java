@@ -13,14 +13,17 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @NamedQueries({
-        @NamedQuery(name = Customer.NQ_LIST_ALL, query = "SELECT c FROM Customer c"),
+        @NamedQuery(name = Customer.NQ_FILTER, query = "SELECT c FROM Customer c WHERE c.company LIKE :filter OR c.companyAddition LIKE :filter"),
+        @NamedQuery(name = Customer.NQ_COUNT_FILTER, query = "SELECT count(c) FROM Customer c WHERE c.company LIKE :filter OR c.companyAddition LIKE :filter"),
         @NamedQuery(name = Customer.NQ_FIND_BY_COMPANY, query = "SELECT c FROM Customer c where c.company = :company")})
 public class Customer extends BaseEntity {
 
-    public static final String NQ_LIST_ALL = "customer.listAll";
+    public static final String NQ_FILTER = "customer.filterCompanyAndCompanyAddition";
     public static final String NQ_FIND_BY_COMPANY = "customer.findByCompany";
+    public static final String NQ_COUNT_FILTER = "customer.countFilterCompanyAndCompanyAddition";
 
     private static final long serialVersionUID = 1L;
+
 
     @Required
     @Label("Firma")

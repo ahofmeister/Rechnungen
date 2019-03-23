@@ -5,6 +5,7 @@ import de.alexanderhofmeister.rechnungen.model.BusinessException;
 import de.alexanderhofmeister.rechnungen.model.Customer;
 import de.alexanderhofmeister.rechnungen.service.BillService;
 import de.alexanderhofmeister.rechnungen.service.CustomerService;
+import de.alexanderhofmeister.rechnungen.service.QueryParameter;
 import de.alexanderhofmeister.rechnungen.util.ButtonUtil;
 import de.alexanderhofmeister.rechnungen.util.FxmlUtil;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
@@ -15,16 +16,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.util.Pair;
 import lombok.Getter;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class CustomerOverviewController implements Initializable {
@@ -35,37 +35,64 @@ public class CustomerOverviewController implements Initializable {
 
     private final static int ROWS_PER_PAGE = 10;
 
-    final static private int CUSTOMER_SIZE = new CustomerService().countAll();
-
     @FXML
     private Button newCustomer;
 
     @FXML
-    private Pagination pagination;
+    TableColumn<Customer, String> id;
+    @FXML
+    TableColumn<Customer, String> name;
+    @FXML
+    TableColumn<Customer, String> address;
+    @FXML
+    TableColumn<Customer, Customer> actions;
 
     private CustomerService customerService = new CustomerService();
 
     @FXML
     private Label hitCount;
 
+    @FXML
+    private TextField filter;
+
+    @FXML
+    private HBox pageContainer;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         initTable();
+        initData();
 
+        this.filter.textProperty().addListener(listener -> initData());
         this.newCustomer.setOnAction(e -> loadCustomerEdit(new Customer()));
 
-        pagination.setPageFactory(this::createPage);
-        pagination.setPageCount((int) Math.ceil(CUSTOMER_SIZE / (ROWS_PER_PAGE)));
-        pagination.setCurrentPageIndex(0);
 
     }
 
-    private void initTable() {
-        this.customerTable = new TableView<>();
-        this.customerTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        this.customerTable.setPrefSize(600, 500);
+    private void initData() {
+        Map<String, Object> parameters = QueryParameter.with("filter", "%" + this.filter.getText() + "%").parameters();
+        Long foundCustomerSize = customerService.findCountWithNamedQuery(Customer.NQ_COUNT_FILTER, parameters);
 
+        ObservableList<Customer> foundCustomer = FXCollections.observableArrayList(customerService.findWithNamedQuery(
+                Customer.NQ_FILTER, parameters, 0, Math.min(ROWS_PER_PAGE, Math.toIntExact(foundCustomerSize))));
+        this.customerTable.setItems(foundCustomer);
+        this.hitCount.setText(String.format("%s Treffer", foundCustomerSize));
+        this.customerTable.visibleProperty().setValue(foundCustomerSize > 0);
+
+        this.pageContainer.getChildren().clear();
+
+        int maxRow = Math.toIntExact(Math.min(ROWS_PER_PAGE, foundCustomerSize));
+        for (int i = 0; i < (Math.ceil(foundCustomerSize * 1.0 / ROWS_PER_PAGE)); i++) {
+            Button pageButton = new Button(String.valueOf(i + 1));
+            int finalI = i;
+            pageButton.setOnAction(e -> this.customerTable.setItems(FXCollections.observableArrayList(customerService.findWithNamedQuery
+                    (Customer.NQ_FILTER, parameters, finalI * ROWS_PER_PAGE, maxRow))));
+            this.pageContainer.getChildren().add(pageButton);
+        }
+    }
+
+    private void initTable() {
         this.customerTable.setRowFactory(tv -> {
             final TableRow<Customer> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -79,29 +106,13 @@ public class CustomerOverviewController implements Initializable {
     }
 
     private void createColumns() {
-        TableColumn<Customer, String> id = new TableColumn<>("#");
-        id.setPrefWidth(50);
 
-        TableColumn<Customer, String> name = new TableColumn<>("Kunde");
-        name.setPrefWidth(150);
+        this.id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        this.name.setCellValueFactory(new PropertyValueFactory<>("company"));
+        this.address.setCellValueFactory(tableCell -> new SimpleStringProperty(tableCell.getValue().getAddress()));
 
-        TableColumn<Customer, String> address = new TableColumn<>("Anschrift");
-        address.setPrefWidth(250);
-
-        TableColumn<Customer, Customer> action = new TableColumn<>("Aktionen");
-        action.setPrefWidth(150);
-
-        this.customerTable.getColumns().add(id);
-        this.customerTable.getColumns().add(name);
-        this.customerTable.getColumns().add(address);
-        this.customerTable.getColumns().add(action);
-
-        id.setCellValueFactory(new PropertyValueFactory<>("id"));
-        name.setCellValueFactory(new PropertyValueFactory<>("company"));
-        address.setCellValueFactory(tableCell -> new SimpleStringProperty(tableCell.getValue().getAddress()));
-
-        action.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-        action.setCellFactory(param -> new TableCell<Customer, Customer>() {
+        this.actions.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        this.actions.setCellFactory(param -> new TableCell<Customer, Customer>() {
 
             @Override
             protected void updateItem(final Customer customer, final boolean empty) {
@@ -144,7 +155,6 @@ public class CustomerOverviewController implements Initializable {
         dialog.getDialogPane().getButtonTypes().addAll(createType, ButtonType.CANCEL);
         dialog.getDialogPane().setContent(eventNew.getKey());
 
-
         dialog.show();
         final Button createCustomerType = (Button) dialog.getDialogPane().lookupButton(createType);
         createCustomerType.addEventFilter(ActionEvent.ACTION, ae -> {
@@ -167,12 +177,5 @@ public class CustomerOverviewController implements Initializable {
 
         });
 
-    }
-
-    private Node createPage(int pageIndex) {
-        ObservableList<Customer> foundCustomer = FXCollections.observableArrayList(customerService.listAll(pageIndex * ROWS_PER_PAGE, Math.min(ROWS_PER_PAGE, CUSTOMER_SIZE)));
-        this.customerTable.setItems(foundCustomer);
-        this.hitCount.setText(String.format("Es wurden %s Kunden gefunden", CUSTOMER_SIZE));
-        return new BorderPane(this.customerTable);
     }
 }

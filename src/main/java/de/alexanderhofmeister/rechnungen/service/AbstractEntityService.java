@@ -7,12 +7,8 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 
 public class AbstractEntityService<E extends BaseEntity> {
@@ -40,42 +36,41 @@ public class AbstractEntityService<E extends BaseEntity> {
 
 
     private List<E> findWithNamedQuery(final String namedQueryName, final Map<String, Object> params) {
-
-        final TypedQuery<E> query = this.em.createNamedQuery(namedQueryName, getEntityClass());
-
-        for (final Entry<String, Object> entry : params.entrySet()) {
-            query.setParameter(entry.getKey(), entry.getValue());
-        }
-
-        return query.getResultList();
+        return findWithNamedQuery(namedQueryName, params, null, null);
     }
 
     private Class<E> getEntityClass() {
         return ClassUtil.getActualTypeBinding(getClass(), AbstractEntityService.class, 0);
     }
 
-    public List<E> listAll(Integer first, Integer max) {
-        final CriteriaBuilder cb = getEm().getCriteriaBuilder();
-        Class<E> rootClass = getEntityClass();
-        final CriteriaQuery<E> cq = cb
-                .createQuery(rootClass);
-        final Root<E> rootEntry = cq.from(rootClass);
+    public List<E> findWithNamedQuery(final String namedQueryName, final Map<String, Object> params, final Integer firstRow,
+                                      final Integer maxRow) {
+        TypedQuery<E> query = this.em.createNamedQuery(namedQueryName, getEntityClass());
 
-        final CriteriaQuery<E> all = cq.select(rootEntry);
-        final TypedQuery<E> allQuery = getEm().createQuery(all);
-        if (first != null) {
-            allQuery.setFirstResult(first);
+        addParams(params, query);
+        if (firstRow != null) {
+            query.setFirstResult(firstRow);
         }
-        if (max != null) {
-            allQuery.setMaxResults(max);
+
+        if (maxRow != null) {
+            query.setMaxResults(maxRow);
         }
-        return allQuery.getResultList();
+
+        return query.getResultList();
     }
 
-    public List<E> listAll() {
-        return listAll(null, null);
+
+    public Long findCountWithNamedQuery(final String namedQueryName, final Map<String, Object> params) {
+
+        final TypedQuery<Long> query = this.em.createNamedQuery(namedQueryName, Long.class);
+        addParams(params, query);
+
+        return query.getSingleResult();
     }
 
+    private void addParams(final Map<String, Object> params, final TypedQuery<?> query) {
+        params.forEach(query::setParameter);
+    }
 
     public void update(final E entity) throws BusinessException {
         entity.validateFields();
@@ -90,14 +85,6 @@ public class AbstractEntityService<E extends BaseEntity> {
         }
 
         this.em.getTransaction().commit();
-    }
-
-    public int countAll() {
-        final CriteriaBuilder cb = getEm().getCriteriaBuilder();
-        final CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        cq.select(cb.count(cq.from(getEntityClass())));
-        final TypedQuery<Long> allQuery = getEm().createQuery(cq);
-        return allQuery.getSingleResult().intValue();
     }
 
 }

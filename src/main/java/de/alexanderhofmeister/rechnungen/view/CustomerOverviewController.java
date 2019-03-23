@@ -32,9 +32,6 @@ public class CustomerOverviewController implements Initializable {
     @Getter
     private TableView<Customer> customerTable;
 
-    @FXML
-    private TextField filterField;
-
     private final static int ROWS_PER_PAGE = 10;
 
     final static private int CUSTOMER_SIZE = new CustomerService().countAll();
@@ -51,10 +48,13 @@ public class CustomerOverviewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         initTable();
+
         this.newCustomer.setOnAction(e -> loadCustomerEdit(new Customer()));
+
         pagination.setPageFactory(this::createPage);
         pagination.setPageCount((int) Math.ceil(CUSTOMER_SIZE / (ROWS_PER_PAGE)));
         pagination.setCurrentPageIndex(0);
+
     }
 
     private void initTable() {

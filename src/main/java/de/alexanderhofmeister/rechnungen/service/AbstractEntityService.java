@@ -1,6 +1,7 @@
 package de.alexanderhofmeister.rechnungen.service;
 
 import de.alexanderhofmeister.rechnungen.model.BaseEntity;
+import de.alexanderhofmeister.rechnungen.model.BusinessException;
 import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 
@@ -75,6 +76,21 @@ public class AbstractEntityService<E extends BaseEntity> {
         return listAll(null, null);
     }
 
+
+    public void update(final E entity) throws BusinessException {
+        entity.validateFields();
+        this.em.getTransaction().begin();
+
+        if (entity.isNew()) {
+            this.em.persist(entity);
+            this.em.flush();
+            this.em.refresh(entity);
+        } else {
+            this.em.merge(entity);
+        }
+
+        this.em.getTransaction().commit();
+    }
 
     public int countAll() {
         final CriteriaBuilder cb = getEm().getCriteriaBuilder();

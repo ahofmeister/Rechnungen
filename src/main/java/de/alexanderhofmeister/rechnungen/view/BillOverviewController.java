@@ -2,6 +2,7 @@ package de.alexanderhofmeister.rechnungen.view;
 
 import de.alexanderhofmeister.rechnungen.model.Bill;
 import de.alexanderhofmeister.rechnungen.model.BusinessException;
+import de.alexanderhofmeister.rechnungen.model.Customer;
 import de.alexanderhofmeister.rechnungen.model.Properties;
 import de.alexanderhofmeister.rechnungen.service.BillService;
 import de.alexanderhofmeister.rechnungen.util.*;
@@ -28,7 +29,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 public class BillOverviewController implements Initializable {
 
@@ -124,24 +124,43 @@ public class BillOverviewController implements Initializable {
                 return true;
             }
 
+            String clearedFilterValue = newValue.toLowerCase();
 
-            return Stream.of(myObject.getCustomer().getCompany(), myObject.getCustomer().getCompanyAddition(), String.valueOf(myObject.getNumber()))
-                    .map(String::toLowerCase).anyMatch((filterValue -> filterValue.contains(newValue.toLowerCase())));
+            Customer customer = myObject.getCustomer();
+            if (customer.getCompany().contains(clearedFilterValue) || customer.getCompanyAddition().contains(clearedFilterValue)) {
+                return true;
+            }
+
+            return String.valueOf(myObject.getNumber()).equals(clearedFilterValue);
+
         }));
+
 
         final SortedList<Bill> sortedData = new SortedList<>(filteredData);
 
-        sortedData.comparatorProperty().bind(this.billTable.comparatorProperty());
+        sortedData.comparatorProperty().
+
+                bind(this.billTable.comparatorProperty());
 
         this.billTable.setItems(sortedData);
         this.number.setCellValueFactory(new PropertyValueFactory<>("number"));
         this.customer.setCellValueFactory(new PropertyValueFactory<>("customer"));
 
-        this.date.setCellValueFactory(tableCell -> new SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().getDate())));
-        this.total.setCellValueFactory(new PropertyValueFactory<>("total"));
-        this.newBill.setOnAction(e -> createBillView(new Bill(), this, this.billService, () -> initTable()));
+        this.date.setCellValueFactory(tableCell -> new
 
-        billTable.setRowFactory(tv -> {
+                SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().
+
+                getDate())));
+        this.total.setCellValueFactory(new PropertyValueFactory<>("total"));
+        this.newBill.setOnAction(e ->
+
+                createBillView(new Bill(), this, this.billService, () ->
+
+                        initTable()));
+
+        billTable.setRowFactory(tv ->
+
+        {
             final TableRow<Bill> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {

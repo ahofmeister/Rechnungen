@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class BillEditController implements Initializable {
+public class BillEditController extends EntityEditController<Bill> implements Initializable {
 
     private CustomerService customerService = new CustomerService();
 
@@ -83,7 +83,8 @@ public class BillEditController implements Initializable {
     private Label errorLabel;
 
 
-    void setBill(Bill bill) {
+    @Override
+    protected void mapEntity(Bill bill) {
         if (bill.getCustomer() != null) {
             this.customer.setText(bill.getCustomer().getCompany());
         }
@@ -107,10 +108,6 @@ public class BillEditController implements Initializable {
 
         initBillEntryTableB(bill);
         calculateAndSetSums();
-    }
-
-    void setErrorText(String message) {
-        this.errorLabel.setText(message);
     }
 
     List<BillEntry> getBillEntries() {
@@ -145,7 +142,6 @@ public class BillEditController implements Initializable {
 
 
     private void initBillEntryTableB(Bill bill) {
-
 
         this.positionColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
         this.amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));

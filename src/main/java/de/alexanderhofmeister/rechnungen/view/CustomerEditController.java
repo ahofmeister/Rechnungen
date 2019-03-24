@@ -2,10 +2,9 @@ package de.alexanderhofmeister.rechnungen.view;
 
 import de.alexanderhofmeister.rechnungen.model.Customer;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class CustomerEditController {
+public class CustomerEditController extends EntityEditController<Customer> {
 
     @FXML
     private TextField company;
@@ -31,10 +30,8 @@ public class CustomerEditController {
     @FXML
     private TextField contactPerson;
 
-    @FXML
-    private Label errorLabel;
-
-    void setCustomer(Customer customer) {
+    @Override
+    protected void mapEntity(Customer customer) {
         setCompany(customer.getCompany());
         setCompanyAddition(customer.getCompanyAddition());
         setStreet(customer.getStreet());
@@ -109,7 +106,5 @@ public class CustomerEditController {
         return this.contactPerson.getText();
     }
 
-    void setErrorText(String errors) {
-        this.errorLabel.setText(errors);
-    }
+
 }

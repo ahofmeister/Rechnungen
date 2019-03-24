@@ -28,6 +28,10 @@ public abstract class BaseEntity implements Serializable {
         return this.id == null;
     }
 
+    public String getTitle() {
+        return this.getClass().getSimpleName();
+    }
+
 
     @Override
     public boolean equals(final Object object) {

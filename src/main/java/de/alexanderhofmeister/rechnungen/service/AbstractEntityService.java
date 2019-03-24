@@ -3,10 +3,10 @@ package de.alexanderhofmeister.rechnungen.service;
 import de.alexanderhofmeister.rechnungen.model.BaseEntity;
 import de.alexanderhofmeister.rechnungen.model.BusinessException;
 import lombok.Getter;
-import org.hibernate.exception.ConstraintViolationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +21,14 @@ public class AbstractEntityService<E extends BaseEntity> {
     }
 
 
-    public void delete(final E entity) throws ConstraintViolationException {
+    public List<E> listAll() {
+        Class<E> rootClass = getEntityClass();
+        final CriteriaQuery<E> cq = getEm().getCriteriaBuilder().createQuery(rootClass);
+        return getEm().createQuery(cq.select(cq.from(rootClass))).getResultList();
+    }
+
+
+    public void delete(final E entity) {
         this.em.getTransaction().begin();
         this.em.remove(this.em.merge(entity));
         this.em.flush();

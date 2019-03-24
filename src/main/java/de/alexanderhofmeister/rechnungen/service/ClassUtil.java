@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-final class ClassUtil {
+public final class ClassUtil {
 
     private ClassUtil() {
         // Helper class
@@ -54,8 +54,8 @@ final class ClassUtil {
      * @return the bound class for the variable in instanceClass
      */
     @SuppressWarnings("unchecked")
-    static <T, E> Class<T> getActualTypeBinding(final Class<? extends E> instanceClass,
-                                                final Class<E> superClass, final int argumentIndex) {
+    public static <T, E> Class<T> getActualTypeBinding(final Class<? extends E> instanceClass,
+                                                       final Class<E> superClass, final int argumentIndex) {
         Type type = getActualTypeArgument(instanceClass, superClass, argumentIndex);
         if (type instanceof TypeVariable<?>) {
             type = ((TypeVariable<?>) type).getBounds()[0];

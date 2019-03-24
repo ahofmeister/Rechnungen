@@ -15,7 +15,7 @@
             </font>
         </Label>
     </Pane>
-    <Button fx:id="newCustomer" layoutX="180.0" layoutY="113.0" mnemonicParsing="false" text="Neuer Kunde"/>
+    <Button fx:id="newEntity" layoutX="180.0" layoutY="113.0" mnemonicParsing="false" text="Neuer Kunde"/>
     <TextField fx:id="filter" layoutX="14.0" layoutY="113.0" promptText="Suche"/>
     <Label fx:id="hitCount" layoutX="14.0" layoutY="169.0" prefHeight="32.0" prefWidth="216.0"
            stylesheets="@../css/style.css" text="Label">
@@ -23,14 +23,7 @@
             <Font name="System Bold" size="14.0"/>
         </font>
     </Label>
-    <TableView fx:id="customerTable" layoutX="14.0" layoutY="209.0" prefHeight="504.0" prefWidth="650.0">
-        <columns>
-            <TableColumn fx:id="id" minWidth="50.0" prefWidth="75.0" text="#"/>
-            <TableColumn fx:id="name" minWidth="150.0" prefWidth="75.0" text="Kunde"/>
-            <TableColumn fx:id="address" minWidth="250.0" prefWidth="300.0" text="Anschrift"/>
-            <TableColumn fx:id="actions" minWidth="100.0" prefWidth="150.0" text="Aktionen"/>
-        </columns>
-    </TableView>
+    <TableView fx:id="entityTable" layoutX="14.0" layoutY="209.0" prefHeight="504.0" prefWidth="800.0"/>
     <HBox fx:id="pageContainer" layoutX="14.0" layoutY="713.0" prefHeight="43.0" prefWidth="650.0"/>
 
 </AnchorPane>

@@ -41,6 +41,9 @@ public class Customer extends BaseEntity {
     @Label("Hausnummer")
     private String streetNumber;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.MERGE)
+    private List<Bill> bills = new ArrayList<>();
+
     @Required
     @Label("Postleitzahl")
     private String zipCode;
@@ -55,8 +58,10 @@ public class Customer extends BaseEntity {
     @Label("Kontaktperson")
     private String contactPerson;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<Bill> bills = new ArrayList<>();
+    @Override
+    public String getTitle() {
+        return "Kunde";
+    }
 
     public String getAddress() {
         return street + " " + streetNumber + ", " + zipCode + " " + city;

@@ -19,11 +19,18 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @NoArgsConstructor
-@NamedQuery(name = Bill.NQ_LIST_ALL_BY_CUSTOMER,
-        query = "SELECT b FROM Bill b where b.customer = :customer")
+@NamedQueries({
+        @NamedQuery(name = Bill.NQ_FILTER, query = "SELECT b FROM Bill b JOIN b.customer c WHERE c.company LIKE :filter OR c.companyAddition LIKE :filter"),
+        @NamedQuery(name = Bill.NQ_COUNT_FILTER, query = "SELECT count(b) FROM Bill b JOIN b.customer c WHERE c.company LIKE :filter OR c.companyAddition LIKE :filter"),
+        @NamedQuery(name = Bill.NQ_LIST_ALL_BY_CUSTOMER, query = "SELECT b FROM Bill b where b.customer = :customer")})
 public class Bill extends BaseEntity {
+
+    public static final String NQ_FILTER = "bill.filter";
+
     public static final String NQ_LIST_ALL_BY_CUSTOMER = "bill.listallbycustomer";
+    public static final String NQ_COUNT_FILTER = "bill.countFilter";
     private static final long serialVersionUID = 1L;
+
     @Required
     @Label("Rechnungsnummer")
     private Integer number;
@@ -63,11 +70,16 @@ public class Bill extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Rechnung Nr. " + number + " vom " + DateUtil.formatToDisplayDate(this.date) + ".";
+        return "Nr. " + number + " vom " + DateUtil.formatToDisplayDate(this.date);
     }
 
     public BigDecimal getAmount() {
         return this.entries.stream().map(BillEntry::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public String getTitle() {
+        return "Rechnung";
     }
 
 }

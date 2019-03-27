@@ -94,6 +94,9 @@ public class BillEditController extends EntityEditController<Bill> implements In
         if (bill.getPostage() != null) {
             this.postage.setText(bill.getPostage().toString());
         }
+        if (bill.getNumber() != null) {
+            this.number.setText(String.valueOf(bill.getNumber()));
+        }
 
         initBillEntryTableB(bill);
         calculateAndSetSums();

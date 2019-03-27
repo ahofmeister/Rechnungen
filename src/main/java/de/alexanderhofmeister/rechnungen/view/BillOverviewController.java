@@ -45,6 +45,9 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
     @Override
     protected List<TableColumn<Bill, ?>> getEntityColumns() {
 
+        TableColumn<Bill, String> number = new TableColumn<>("Nummer");
+        number.setPrefWidth(75);
+
         TableColumn<Bill, String> customer = new TableColumn<>("Kunde");
         customer.setPrefWidth(150);
 
@@ -55,11 +58,12 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
         total.setPrefWidth(100);
 
 
+        number.setCellValueFactory(new PropertyValueFactory<>("number"));
         customer.setCellValueFactory(new PropertyValueFactory<>("customer"));
         date.setCellValueFactory(tableCell -> new SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().getDate())));
         total.setCellValueFactory(new PropertyValueFactory<>("total"));
 
-        return Arrays.asList(customer, total, date);
+        return Arrays.asList(customer, number, total, date);
     }
 
 

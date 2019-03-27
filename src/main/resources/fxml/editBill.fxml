@@ -9,13 +9,18 @@
             fx:controller="de.alexanderhofmeister.rechnungen.view.BillEditController">
     <children>
         <VBox prefHeight="345.0" prefWidth="783.0" spacing="10.0">
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="25.0">
+            <VBox spacing="10.0">
                 <children>
-                    <TextField fx:id="number" promptText="Nummer"/>
-                    <TextField fx:id="customer" promptText="Kunde"/>
-                    <DatePicker fx:id="date" layoutX="10.0" layoutY="10.0" promptText="Datum"/>
+                    <TextField fx:id="customer" maxWidth="350.0" minWidth="200.0" prefHeight="25.0" prefWidth="200.0"
+                               promptText="Kunde"/>
+                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="25.0">
+                        <children>
+                            <TextField fx:id="number" promptText="Nummer"/>
+                            <DatePicker fx:id="date" promptText="Datum" showWeekNumbers="true"/>
+                        </children>
+                    </HBox>
                 </children>
-            </HBox>
+            </VBox>
 
 
             <HBox prefHeight="250.0" prefWidth="716.0">

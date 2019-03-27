@@ -5,10 +5,12 @@ import de.alexanderhofmeister.rechnungen.model.BillEntry;
 import de.alexanderhofmeister.rechnungen.model.BusinessException;
 import de.alexanderhofmeister.rechnungen.model.Customer;
 import de.alexanderhofmeister.rechnungen.service.CustomerService;
+import de.alexanderhofmeister.rechnungen.util.DateUtil;
 import de.alexanderhofmeister.rechnungen.util.MoneyUtil;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconName;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -65,7 +67,7 @@ public class BillEditController extends EntityEditController<Bill> implements In
     private TableColumn<BillEntry, Integer> amountColumn;
 
     @FXML
-    private TableColumn<BillEntry, LocalDate> periodColumn;
+    private TableColumn<BillEntry, String> periodColumn;
 
     @FXML
     private TableColumn<BillEntry, BillEntry> billEntryActionColumn;
@@ -137,7 +139,8 @@ public class BillEditController extends EntityEditController<Bill> implements In
 
         this.positionColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
         this.amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        this.periodColumn.setCellValueFactory(new PropertyValueFactory<>("period"));
+        this.periodColumn.setCellValueFactory(tableCell -> new SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().getPeriod())));
+
 
         this.addBillEntry.setOnAction(e -> {
             BillEntry billEntry = new BillEntry(bill);

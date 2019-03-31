@@ -23,7 +23,7 @@
             <Font name="System Bold" size="14.0"/>
         </font>
     </Label>
-    <TableView fx:id="entityTable" layoutX="14.0" layoutY="209.0" prefHeight="504.0" prefWidth="700.0"/>
+    <TableView fx:id="entityTable" layoutX="14.0" layoutY="209.0" prefHeight="504.0" prefWidth="850.0"/>
     <HBox fx:id="pageContainer" layoutX="14.0" layoutY="713.0" prefHeight="43.0" prefWidth="650.0"/>
 
 </AnchorPane>

@@ -1,6 +1,7 @@
 package de.alexanderhofmeister.rechnungen.view;
 
 import de.alexanderhofmeister.rechnungen.model.Bill;
+import de.alexanderhofmeister.rechnungen.model.Customer;
 import de.alexanderhofmeister.rechnungen.model.Properties;
 import de.alexanderhofmeister.rechnungen.service.BillService;
 import de.alexanderhofmeister.rechnungen.util.ButtonUtil;
@@ -49,7 +50,7 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
         number.setPrefWidth(75);
 
         TableColumn<Bill, String> customer = new TableColumn<>("Kunde");
-        customer.setPrefWidth(150);
+        customer.setPrefWidth(300);
 
         TableColumn<Bill, String> total = new TableColumn<>("Betrag");
         total.setPrefWidth(100);
@@ -59,7 +60,10 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
 
 
         number.setCellValueFactory(new PropertyValueFactory<>("number"));
-        customer.setCellValueFactory(new PropertyValueFactory<>("customer"));
+        customer.setCellValueFactory(tableCell -> {
+            Customer valueCustomer = tableCell.getValue().getCustomer();
+            return new SimpleStringProperty(valueCustomer.getCompany() + " - " + valueCustomer.getCompanyAddition());
+        });
         date.setCellValueFactory(tableCell -> new SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().getDate())));
         total.setCellValueFactory(new PropertyValueFactory<>("total"));
 

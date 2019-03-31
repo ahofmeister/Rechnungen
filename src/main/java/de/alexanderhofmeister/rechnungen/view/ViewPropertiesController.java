@@ -55,7 +55,9 @@ public class ViewPropertiesController implements Initializable {
             HBox hBox = new HBox(20);
             TextField valueInput = new TextField(instance.getString(key));
             valueInput.setId(key);
-            hBox.getChildren().addAll(new Label(key), valueInput);
+            Label label = new Label(key);
+            label.setPrefWidth(100);
+            hBox.getChildren().addAll(label, valueInput);
             this.propertiesContainer.getChildren().add(hBox);
         });
 

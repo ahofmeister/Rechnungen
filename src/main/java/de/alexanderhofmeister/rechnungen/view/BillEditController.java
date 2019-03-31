@@ -87,8 +87,9 @@ public class BillEditController extends EntityEditController<Bill> implements In
 
     @Override
     protected void mapEntity(Bill bill) {
-        if (bill.getCustomer() != null) {
-            this.customer.setText(bill.getCustomer().getCompany());
+        Customer customer = bill.getCustomer();
+        if (customer != null) {
+            this.customer.setText(customer.getCompany() + " - " + customer.getCompanyAddition());
         }
         this.date.setValue(bill.getDate());
         this.billEntries.setItems(FXCollections.observableArrayList(bill.getEntries()));
@@ -114,7 +115,7 @@ public class BillEditController extends EntityEditController<Bill> implements In
         this.postage.textProperty().addListener((observable, oldValue, newValue) -> calculateAndSetSums());
 
         TextFields.bindAutoCompletion(this.customer,
-                this.customerService.listAll().stream().map(Customer::getCompany).collect(Collectors.toList()));
+                this.customerService.listAll().stream().map(customer1 -> customer1.getCompany() + " - " + customer1.getCompanyAddition()).collect(Collectors.toList()));
 
         this.customer.textProperty().addListener((observable, oldValue, newValue) -> {
             Customer customer = findCustomer();
@@ -222,11 +223,12 @@ public class BillEditController extends EntityEditController<Bill> implements In
     }
 
     private Customer findCustomer() {
-        final String customerInputText = this.customer.getText();
-        if (customerInputText.isEmpty()) {
+        final String[] customerInputText = this.customer.getText().split(" - ");
+
+        if (customerInputText.length != 2) {
             return null;
         }
-        return this.customerService.findByCompany(customerInputText);
+        return this.customerService.findByCompany(customerInputText[0]);
     }
 
     BigDecimal getAmount() {

@@ -1,5 +1,6 @@
 package de.alexanderhofmeister.rechnungen.app;
 
+import de.alexanderhofmeister.rechnungen.service.BillService;
 import de.alexanderhofmeister.rechnungen.util.FxmlUtil;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -12,6 +13,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         final Scene scene = new Scene(FxmlUtil.loadFxml(this, "main").getKey());
+
+        new Thread(() -> new BillService()).start();
+
         scene.getStylesheets().add("/css/style.css");
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(scene);

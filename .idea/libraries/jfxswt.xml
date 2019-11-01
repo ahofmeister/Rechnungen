@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="jfxrt">
+  <library name="jfxswt">
     <CLASSES>
-      <root url="jar:///usr/share/java/openjfx/jre/lib/ext/jfxrt.jar!/" />
+      <root url="jar:///usr/share/java/openjfx/jre/lib/jfxswt.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

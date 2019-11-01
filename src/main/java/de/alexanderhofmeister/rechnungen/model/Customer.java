@@ -1,17 +1,10 @@
 package de.alexanderhofmeister.rechnungen.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
 @Entity
-@NoArgsConstructor
 @NamedQueries({
         @NamedQuery(name = Customer.NQ_FILTER, query = "SELECT c FROM Customer c WHERE c.company LIKE :filter OR c.companyAddition LIKE :filter ORDER BY c.company, c.companyAddition"),
         @NamedQuery(name = Customer.NQ_COUNT_FILTER, query = "SELECT count(c) FROM Customer c WHERE c.company LIKE :filter OR c.companyAddition LIKE :filter"),
@@ -27,36 +20,36 @@ public class Customer extends BaseEntity {
 
     @Required
     @Label("Firma")
-    private String company;
+    public String company;
 
     @Required
     @Label("Firmenzusatz")
-    private String companyAddition;
+    public String companyAddition;
 
     @Required
     @Label("Straße")
-    private String street;
+    public String street;
 
     @Required
     @Label("Hausnummer")
-    private String streetNumber;
+    public String streetNumber;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.MERGE)
-    private List<Bill> bills = new ArrayList<>();
+    public List<Bill> bills = new ArrayList<>();
 
     @Required
     @Label("Postleitzahl")
-    private String zipCode;
+    public String zipCode;
 
     @Required
     @Label("Ort")
-    private String city;
+    public String city;
 
     @Label("E-Mail")
-    private String email;
+    public String email;
 
     @Label("Kontaktperson")
-    private String contactPerson;
+    public String contactPerson;
 
     @Override
     public String getTitle() {

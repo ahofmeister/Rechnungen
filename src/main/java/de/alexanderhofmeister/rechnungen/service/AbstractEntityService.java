@@ -2,7 +2,6 @@ package de.alexanderhofmeister.rechnungen.service;
 
 import de.alexanderhofmeister.rechnungen.model.BaseEntity;
 import de.alexanderhofmeister.rechnungen.model.BusinessException;
-import lombok.Getter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -13,27 +12,26 @@ import java.util.Map;
 
 public class AbstractEntityService<E extends BaseEntity> {
 
-    @Getter
-    private final EntityManager em;
+    private final EntityManager entityManager;
 
     AbstractEntityService() {
-        this.em = PersistenceManager.INSTANCE.getEntityManager();
+        this.entityManager = PersistenceManager.INSTANCE.getEntityManager();
     }
 
 
     public List<E> listAll() {
         Class<E> rootClass = getEntityClass();
-        final CriteriaQuery<E> cq = getEm().getCriteriaBuilder().createQuery(rootClass);
-        return getEm().createQuery(cq.select(cq.from(rootClass))).getResultList();
+        final CriteriaQuery<E> cq = entityManager.getCriteriaBuilder().createQuery(rootClass);
+        return entityManager.createQuery(cq.select(cq.from(rootClass))).getResultList();
     }
 
 
     public void delete(final E entity) {
-        this.em.getTransaction().begin();
-        this.em.remove(this.em.merge(entity));
-        this.em.flush();
-        this.em.getTransaction().commit();
-        this.em.clear();
+        this.entityManager.getTransaction().begin();
+        this.entityManager.remove(this.entityManager.merge(entity));
+        this.entityManager.flush();
+        this.entityManager.getTransaction().commit();
+        this.entityManager.clear();
     }
 
 
@@ -52,7 +50,7 @@ public class AbstractEntityService<E extends BaseEntity> {
 
     public List<E> findWithNamedQuery(final String namedQueryName, final Map<String, Object> params, final Integer firstRow,
                                       final Integer maxRow) {
-        TypedQuery<E> query = this.em.createNamedQuery(namedQueryName, getEntityClass());
+        TypedQuery<E> query = this.entityManager.createNamedQuery(namedQueryName, getEntityClass());
 
         addParams(params, query);
         if (firstRow != null) {
@@ -69,7 +67,7 @@ public class AbstractEntityService<E extends BaseEntity> {
 
     public Long findCountWithNamedQuery(final String namedQueryName, final Map<String, Object> params) {
 
-        final TypedQuery<Long> query = this.em.createNamedQuery(namedQueryName, Long.class);
+        final TypedQuery<Long> query = this.entityManager.createNamedQuery(namedQueryName, Long.class);
         addParams(params, query);
 
         return query.getSingleResult();
@@ -81,17 +79,17 @@ public class AbstractEntityService<E extends BaseEntity> {
 
     public void update(final E entity) throws BusinessException {
         entity.validateFields();
-        this.em.getTransaction().begin();
+        this.entityManager.getTransaction().begin();
 
         if (entity.isNew()) {
-            this.em.persist(entity);
-            this.em.flush();
-            this.em.refresh(entity);
+            this.entityManager.persist(entity);
+            this.entityManager.flush();
+            this.entityManager.refresh(entity);
         } else {
-            this.em.merge(entity);
+            this.entityManager.merge(entity);
         }
 
-        this.em.getTransaction().commit();
+        this.entityManager.getTransaction().commit();
     }
 
 }

@@ -25,8 +25,8 @@ import java.util.Map;
 public class ExportUtil {
 
     public static String getFileNameBill(Bill bill) {
-        return DateUtil.formatToDisplayDate(bill.getDate()) + " - "
-                + bill.getCustomer().getCompany() + ".pdf";
+        return DateUtil.formatToDisplayDate(bill.date) + " - "
+                + bill.customer.company + ".pdf";
     }
 
     private static String buildArchiveDirectory(LocalDate date) {

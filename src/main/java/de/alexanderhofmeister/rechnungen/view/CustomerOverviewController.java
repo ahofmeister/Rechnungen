@@ -6,16 +6,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
-import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class CustomerOverviewController extends EntityOverviewController<Customer, CustomerEditController> {
 
-    @Getter
     private CustomerService service = new CustomerService();
 
+    @Override
+    public CustomerService getService() {
+        return this.service;
+    }
 
     @Override
     protected String getFilterNamedQuery() {
@@ -49,14 +51,14 @@ public class CustomerOverviewController extends EntityOverviewController<Custome
 
     @Override
     protected void mapEditEntity(Customer customer, CustomerEditController controller) {
-        customer.setCompany(controller.getCompany());
-        customer.setCompanyAddition(controller.getCompanyAddition());
-        customer.setStreet(controller.getStreet());
-        customer.setStreetNumber(controller.getStreetNumber());
-        customer.setZipCode(controller.getZipCode());
-        customer.setCity(controller.getCity());
-        customer.setEmail(controller.getEmail());
-        customer.setContactPerson(controller.getContactPerson());
+        customer.company = controller.getCompany();
+        customer.companyAddition = controller.getCompanyAddition();
+        customer.street = controller.getStreet();
+        customer.streetNumber = controller.getStreetNumber();
+        customer.zipCode = controller.getZipCode();
+        customer.city = controller.getCity();
+        customer.email = controller.getEmail();
+        customer.contactPerson = controller.getContactPerson();
     }
 
     @Override

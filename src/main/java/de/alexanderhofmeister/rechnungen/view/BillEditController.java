@@ -87,18 +87,18 @@ public class BillEditController extends EntityEditController<Bill> implements In
 
     @Override
     protected void mapEntity(Bill bill) {
-        Customer customer = bill.getCustomer();
+        Customer customer = bill.customer;
         if (customer != null) {
-            this.customer.setText(customer.getCompany() + " - " + customer.getCompanyAddition());
+            this.customer.setText(customer.company + " - " + customer.companyAddition);
         }
-        this.date.setValue(bill.getDate());
-        this.billEntries.setItems(FXCollections.observableArrayList(bill.getEntries()));
+        this.date.setValue(bill.date);
+        this.billEntries.setItems(FXCollections.observableArrayList(bill.entries));
 
-        if (bill.getPostage() != null) {
-            this.postage.setText(bill.getPostage().toString());
+        if (bill.postage != null) {
+            this.postage.setText(bill.postage.toString());
         }
-        if (bill.getNumber() != null) {
-            this.number.setText(String.valueOf(bill.getNumber()));
+        if (bill.number != null) {
+            this.number.setText(String.valueOf(number));
         }
 
         initBillEntryTableB(bill);
@@ -115,17 +115,17 @@ public class BillEditController extends EntityEditController<Bill> implements In
         this.postage.textProperty().addListener((observable, oldValue, newValue) -> calculateAndSetSums());
 
         TextFields.bindAutoCompletion(this.customer,
-                this.customerService.listAll().stream().map(customer1 -> customer1.getCompany() + " - " + customer1.getCompanyAddition()).collect(Collectors.toList()));
+                this.customerService.listAll().stream().map(customer1 -> customer1.company + " - " + customer1.companyAddition).collect(Collectors.toList()));
 
         this.customer.textProperty().addListener((observable, oldValue, newValue) -> {
             Customer customer = findCustomer();
 
             if (customer != null) {
-                Bill lastBill = customer.getBills().stream().reduce((a, b) -> b).orElse(null);
+                Bill lastBill = customer.bills.stream().reduce((a, b) -> b).orElse(null);
                 int nextBillNumber = 1;
                 if (lastBill != null) {
-                    if (!lastBill.getDate().isAfter((LocalDate.now()))) {
-                        nextBillNumber = lastBill.getNumber() + 1;
+                    if (!lastBill.date.isAfter((LocalDate.now()))) {
+                        nextBillNumber = lastBill.number + 1;
                     }
                 }
                 this.number.setText(String.valueOf(nextBillNumber));
@@ -140,15 +140,15 @@ public class BillEditController extends EntityEditController<Bill> implements In
 
         this.positionColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
         this.amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        this.periodColumn.setCellValueFactory(tableCell -> new SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().getPeriod())));
+        this.periodColumn.setCellValueFactory(tableCell -> new SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().period)));
 
 
         this.addBillEntry.setOnAction(e -> {
             BillEntry billEntry = new BillEntry(bill);
-            billEntry.setPosition(position.getText());
-            billEntry.setPeriod(period.getValue());
+            billEntry.position = position.getText();
+            billEntry.period = period.getValue();
             try {
-                billEntry.setAmount(new BigDecimal(MoneyUtil.convertToGermanCurrency(amount.getText())));
+                billEntry.amount = new BigDecimal(MoneyUtil.convertToGermanCurrency(amount.getText()));
             } catch (NumberFormatException nfe) {
                 // Ignore: It is handled due to validate fields of the bill entry
             }
@@ -199,7 +199,7 @@ public class BillEditController extends EntityEditController<Bill> implements In
     }
 
     private void calculateAndSetSums() {
-        BigDecimal amount = this.billEntries.getItems().stream().map(BillEntry::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal amount = this.billEntries.getItems().stream().map(billEntry -> billEntry.amount).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal vat = amount.divide(BigDecimal.valueOf(100)).multiply(BigDecimal.valueOf(19));
         BigDecimal subtotal = amount.add(vat);
         BigDecimal sum = subtotal.add(MoneyUtil.convertToBigDecimal(postage.getText()));
@@ -211,7 +211,7 @@ public class BillEditController extends EntityEditController<Bill> implements In
     }
 
     int getNumber() {
-        return Integer.valueOf(this.number.getText());
+        return Integer.parseInt(this.number.getText());
     }
 
     LocalDate getDate() {

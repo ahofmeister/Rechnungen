@@ -13,7 +13,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
-import lombok.Getter;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +24,6 @@ import java.util.Map;
 public class BillOverviewController extends EntityOverviewController<Bill, BillEditController> {
 
 
-    @Getter
     private BillService service = new BillService();
 
     @Override
@@ -36,6 +34,11 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
     @Override
     protected String getFilterCountNamedQuery() {
         return Bill.NQ_COUNT_FILTER;
+    }
+
+    @Override
+    protected BillService getService() {
+        return this.service;
     }
 
     @Override
@@ -61,10 +64,10 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
 
         number.setCellValueFactory(new PropertyValueFactory<>("number"));
         customer.setCellValueFactory(tableCell -> {
-            Customer valueCustomer = tableCell.getValue().getCustomer();
-            return new SimpleStringProperty(valueCustomer.getCompany() + " - " + valueCustomer.getCompanyAddition());
+            Customer valueCustomer = tableCell.getValue().customer;
+            return new SimpleStringProperty(valueCustomer.company + " - " + valueCustomer.companyAddition);
         });
-        date.setCellValueFactory(tableCell -> new SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().getDate())));
+        date.setCellValueFactory(tableCell -> new SimpleStringProperty(DateUtil.formatToDisplayDate(tableCell.getValue().date)));
         total.setCellValueFactory(new PropertyValueFactory<>("total"));
 
         return Arrays.asList(customer, number, total, date);
@@ -75,22 +78,22 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
     List<Button> getCustomButtons(Bill bill) {
         final Button exportAsPdf = ButtonUtil.createIconButton(event -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("customer", bill.getCustomer());
+            attributes.put("customer", bill.customer);
             attributes.put("bill", bill);
             attributes.put("MoneyUtil", MoneyUtil.class);
             attributes.put("DateUtil", DateUtil.class);
             attributes.put("Properties", Properties.getInstance());
-            ExportUtil.createFileFromTemplate(bill.getDate(), new File(ExportUtil.getFileNameBill(bill)), "bill", attributes);
+            ExportUtil.createFileFromTemplate(bill.date, new File(ExportUtil.getFileNameBill(bill)), "bill", attributes);
         }, FontAwesomeIconName.
                 SAVE, "Speichern");
         final Button printButton = ButtonUtil.createIconButton(event1 -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("customer", bill.getCustomer());
+            attributes.put("customer", bill.customer);
             attributes.put("bill", bill);
             attributes.put("MoneyUtil", MoneyUtil.class);
             attributes.put("DateUtil", DateUtil.class);
             attributes.put("Properties", Properties.getInstance());
-            ExportUtil.printFile(ExportUtil.createFileFromTemplate(bill.getDate(), new File(ExportUtil.getFileNameBill(bill)), "bill", attributes));
+            ExportUtil.printFile(ExportUtil.createFileFromTemplate(bill.date, new File(ExportUtil.getFileNameBill(bill)), "bill", attributes));
         }, FontAwesomeIconName.PRINT, "Drucken");
 
 
@@ -101,12 +104,12 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
             try {
                 String body = ExportUtil.fillTemplateFromVariables("emailBill", attributes);
                 Map<String, Object> attributes1 = new HashMap<>();
-                attributes1.put("customer", bill.getCustomer());
+                attributes1.put("customer", bill.customer);
                 attributes1.put("bill", bill);
                 attributes1.put("MoneyUtil", MoneyUtil.class);
                 attributes1.put("DateUtil", DateUtil.class);
                 attributes1.put("Properties", Properties.getInstance());
-                ExportUtil.sendViaEmail(ExportUtil.createFileFromTemplate(bill.getDate(), new File(ExportUtil.getFileNameBill(bill)), "bill", attributes1), bill.toString(), body, bill.getCustomer().getEmail());
+                ExportUtil.sendViaEmail(ExportUtil.createFileFromTemplate(bill.date, new File(ExportUtil.getFileNameBill(bill)), "bill", attributes1), bill.toString(), body, bill.customer.email);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -119,14 +122,14 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
 
     @Override
     protected void mapEditEntity(Bill bill, BillEditController controller) {
-        bill.setNumber(controller.getNumber());
-        bill.setDate(controller.getDate());
-        bill.setCustomer(controller.getCustomer());
-        bill.setAmount(controller.getAmount());
-        bill.setVat(controller.getVat());
-        bill.setSubtotal(controller.getSubTotal());
-        bill.setPostage(controller.getPostage());
-        bill.setTotal(controller.getTotal());
-        bill.setEntries(controller.getBillEntries());
+        bill.number = controller.getNumber();
+        bill.date = controller.getDate();
+        bill.customer = controller.getCustomer();
+        bill.amount = controller.getAmount();
+        bill.vat = controller.getVat();
+        bill.subtotal = controller.getSubTotal();
+        bill.postage = controller.getPostage();
+        bill.total = controller.getTotal();
+        bill.entries = controller.getBillEntries();
     }
 }

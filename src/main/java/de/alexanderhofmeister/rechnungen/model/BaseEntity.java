@@ -1,21 +1,16 @@
 package de.alexanderhofmeister.rechnungen.model;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
 @MappedSuperclass
-public abstract class BaseEntity implements Serializable {
+public abstract class BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,10 +42,10 @@ public abstract class BaseEntity implements Serializable {
 
         final BaseEntity other = (BaseEntity) object;
 
-        if (this.getId() == null || other.getId() == null) {
+        if (this.id == null || other.id == null) {
             return false;
         }
-        return this.id.equals(other.getId());
+        return this.id.equals(other.id);
     }
 
     public void validateFields() throws BusinessException {

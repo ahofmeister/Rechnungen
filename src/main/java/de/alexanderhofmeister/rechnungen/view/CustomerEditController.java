@@ -32,14 +32,14 @@ public class CustomerEditController extends EntityEditController<Customer> {
 
     @Override
     protected void mapEntity(Customer customer) {
-        setCompany(customer.getCompany());
-        setCompanyAddition(customer.getCompanyAddition());
-        setStreet(customer.getStreet());
-        setStreetNumber(customer.getStreetNumber());
-        setZipCode(customer.getZipCode());
-        setCity(customer.getCity());
-        setEmail(customer.getEmail());
-        setContactPerson(customer.getContactPerson());
+        setCompany(customer.company);
+        setCompanyAddition(customer.companyAddition);
+        setStreet(customer.street);
+        setStreetNumber(customer.streetNumber);
+        setZipCode(customer.zipCode);
+        setCity(customer.city);
+        setEmail(customer.email);
+        setContactPerson(customer.contactPerson);
     }
 
     private void setCompany(String company) {

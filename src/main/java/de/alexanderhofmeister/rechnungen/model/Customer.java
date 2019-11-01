@@ -15,9 +15,6 @@ public class Customer extends BaseEntity {
     public static final String NQ_FIND_BY_COMPANY = "customer.findByCompany";
     public static final String NQ_COUNT_FILTER = "customer.countFilterCompanyAndCompanyAddition";
 
-    private static final long serialVersionUID = 1L;
-
-
     @Required
     @Label("Firma")
     public String company;

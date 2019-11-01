@@ -9,14 +9,14 @@ import javafx.scene.control.Tooltip;
 
 public class ButtonUtil {
 
-    public static Button createButton(EventHandler<ActionEvent> action) {
+    private static Button createButton(EventHandler<ActionEvent> action) {
         final Button button = new Button();
         button.getStyleClass().add("button");
         button.setOnAction(action);
         return button;
     }
 
-    public static Button createButton(EventHandler<ActionEvent> action, String tooltipText) {
+    private static Button createButton(EventHandler<ActionEvent> action, String tooltipText) {
         Button button = createButton(action);
         Tooltip tooltip = new Tooltip(tooltipText);
         button.setTooltip(tooltip);

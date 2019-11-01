@@ -14,7 +14,7 @@ public class Main extends Application {
 
         final Scene scene = new Scene(FxmlUtil.loadFxml(this, "main").getKey());
 
-        new Thread(() -> new BillService()).start();
+        new Thread(BillService::new).start();
 
         scene.getStylesheets().add("/css/style.css");
         primaryStage.initStyle(StageStyle.UNDECORATED);

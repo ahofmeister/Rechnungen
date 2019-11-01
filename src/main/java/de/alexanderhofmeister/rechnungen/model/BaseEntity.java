@@ -12,8 +12,6 @@ import java.util.List;
 @MappedSuperclass
 public abstract class BaseEntity {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GenericGenerator(name = "gen", strategy = "increment")
     @GeneratedValue(generator = "gen")

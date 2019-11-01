@@ -15,11 +15,6 @@ public class QueryParameter {
         parameters.put(name, value);
     }
 
-    public QueryParameter and(String name, Object value) {
-        parameters.put(name, value);
-        return this;
-    }
-
     public Map<String, Object> parameters() {
         return parameters;
     }

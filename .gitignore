@@ -1,6 +1,9 @@
-/target/
-/data/
+target/
+data/
 config.properties
-/images
-/templates/
-/Archiv
+images
+templates/
+Archiv
+.idea/
+*.iml
+credentials.json

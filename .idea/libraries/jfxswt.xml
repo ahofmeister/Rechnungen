@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="jfxswt">
-    <CLASSES>
-      <root url="jar:///usr/share/java/openjfx/jre/lib/jfxswt.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

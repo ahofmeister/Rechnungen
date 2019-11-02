@@ -124,7 +124,7 @@ public class BillEditController extends EntityEditController<Bill> implements In
                 Bill lastBill = customer.bills.stream().reduce((a, b) -> b).orElse(null);
                 int nextBillNumber = 1;
                 if (lastBill != null) {
-                    if (!lastBill.date.isAfter((LocalDate.now()))) {
+                    if (lastBill.date.getYear() ==  LocalDate.now().getYear()) {
                         nextBillNumber = lastBill.number + 1;
                     }
                 }

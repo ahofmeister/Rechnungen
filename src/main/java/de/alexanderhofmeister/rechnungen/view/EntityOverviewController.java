@@ -189,7 +189,6 @@ public abstract class EntityOverviewController<E extends BaseEntity, C extends E
         dialog.show();
         final Button createCustomerType = (Button) dialog.getDialogPane().lookupButton(createType);
         createCustomerType.addEventFilter(ActionEvent.ACTION, ae -> {
-
             try {
                 mapEditEntity(entity, controller);
                 getService().update(entity);

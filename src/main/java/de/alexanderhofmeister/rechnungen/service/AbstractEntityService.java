@@ -79,6 +79,7 @@ public class AbstractEntityService<E extends BaseEntity> {
 
     public void update(final E entity) throws BusinessException {
         entity.validateFields();
+        validate(entity);
         this.entityManager.getTransaction().begin();
 
         if (entity.isNew()) {
@@ -92,4 +93,7 @@ public class AbstractEntityService<E extends BaseEntity> {
         this.entityManager.getTransaction().commit();
     }
 
+    void validate(E entity) throws BusinessException {
+        // Do nothing per default
+    }
 }

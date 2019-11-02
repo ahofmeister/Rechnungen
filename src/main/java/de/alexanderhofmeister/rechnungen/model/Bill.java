@@ -16,10 +16,12 @@ import java.util.List;
         @NamedQuery(name = Bill.NQ_COUNT_FILTER, query = "SELECT count(b) FROM Bill b JOIN b.customer c WHERE c.company LIKE :filter OR c.companyAddition LIKE :filter"),
         @NamedQuery(name = Bill.NQ_LIST_ALL_BY_CUSTOMER, query = "SELECT b FROM Bill b where b.customer = :customer")})
 public class Bill extends BaseEntity {
+    public Bill() {
+    }
 
     public static final String NQ_FILTER = "bill.filter";
 
-     static final String NQ_LIST_ALL_BY_CUSTOMER = "bill.listallbycustomer";
+    static final String NQ_LIST_ALL_BY_CUSTOMER = "bill.listallbycustomer";
     public static final String NQ_COUNT_FILTER = "bill.countFilter";
 
     @Required

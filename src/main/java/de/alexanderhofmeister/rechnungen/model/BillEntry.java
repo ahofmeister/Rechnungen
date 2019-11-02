@@ -13,6 +13,9 @@ import java.time.LocalDate;
         query = "SELECT be from BillEntry be where be.bill = :bill")
 public class BillEntry extends BaseEntity {
 
+    public BillEntry() {
+    }
+
     static final String NQ_LIST_ALL_BY_BILL = "billentry.listallbybill";
 
     @Required

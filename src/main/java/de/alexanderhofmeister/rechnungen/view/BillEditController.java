@@ -228,7 +228,7 @@ public class BillEditController extends EntityEditController<Bill> implements In
         if (customerInputText.length != 2) {
             return null;
         }
-        return this.customerService.findByCompany(customerInputText[0]);
+        return this.customerService.findByCompany(customerInputText[0], customerInputText[1]);
     }
 
     BigDecimal getAmount() {

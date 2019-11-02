@@ -25,6 +25,9 @@ public abstract class BaseEntity {
         return this.getClass().getSimpleName();
     }
 
+    public Long getId() {
+        return id;
+    }
 
     @Override
     public boolean equals(final Object object) {

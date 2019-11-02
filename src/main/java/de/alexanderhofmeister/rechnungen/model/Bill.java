@@ -70,6 +70,14 @@ public class Bill extends BaseEntity {
         return this.entries.stream().map(entry -> entry.amount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public Integer getNumber() {
+        return number;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
     @Override
     public String getTitle() {
         return "Rechnung";

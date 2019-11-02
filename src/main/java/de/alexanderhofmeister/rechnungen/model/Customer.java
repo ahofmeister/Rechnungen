@@ -22,6 +22,10 @@ public class Customer extends BaseEntity {
     @Label("Firma")
     public String company;
 
+    public String getCompany() {
+        return company;
+    }
+
     @Required
     @Label("Firmenzusatz")
     public String companyAddition;

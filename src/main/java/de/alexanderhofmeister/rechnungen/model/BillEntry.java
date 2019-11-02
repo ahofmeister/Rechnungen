@@ -36,6 +36,14 @@ public class BillEntry extends BaseEntity {
     @Label("Rechnung")
     private Bill bill;
 
+    public String getPosition() {
+        return position;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
     public BillEntry(Bill bill) {
         this.bill = bill;
     }

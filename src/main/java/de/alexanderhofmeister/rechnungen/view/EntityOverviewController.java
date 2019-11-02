@@ -64,7 +64,10 @@ public abstract class EntityOverviewController<E extends BaseEntity, C extends E
         this.entityTable.setItems(foundCustomer);
         this.hitCount.setText(String.format("%s Treffer", foundEntitySize));
         this.entityTable.visibleProperty().setValue(foundEntitySize > 0);
+        initPaging(parameters, foundEntitySize);
+    }
 
+    private void initPaging(Map<String, Object> parameters, Long foundEntitySize) {
         this.pageContainer.getChildren().clear();
 
         int pageSize = (int) Math.ceil(foundEntitySize * 1.0 / ROWS_PER_PAGE);
@@ -89,15 +92,6 @@ public abstract class EntityOverviewController<E extends BaseEntity, C extends E
         HBox paging = new HBox(10);
         paging.getChildren().addAll(pageInputfield, pageSizeLabel);
         this.pageContainer.getChildren().add(paging);
-
-
-//        for (int i = 0; i < pageSize; i++) {
-//            Button pageButton = new Button(String.valueOf(i + 1));
-//            int finalI = i;
-//            pageButton.setOnAction(e -> this.entityTable.setItems(FXCollections.observableArrayList(getService().findWithNamedQuery
-//                    (getFilterNamedQuery(), parameters, finalI * ROWS_PER_PAGE, maxRow))));
-//            this.pageContainer.getChildren().add(pageButton);
-//        }
     }
 
     private String getPagingLabel(int pageSize, AtomicInteger currentPage) {

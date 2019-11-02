@@ -8,7 +8,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-
     <groupId>Rechnungen</groupId>
     <artifactId>Rechnungen</artifactId>
     <version>2.2</version>
@@ -85,12 +84,6 @@
             <version>1.4</version>
         </dependency>
 
-        <!-- Util -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.5</version>
-        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

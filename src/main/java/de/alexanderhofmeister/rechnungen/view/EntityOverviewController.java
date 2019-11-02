@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class EntityOverviewController<E extends BaseEntity, C extends EntityEditController> implements Initializable {
 
@@ -66,14 +67,41 @@ public abstract class EntityOverviewController<E extends BaseEntity, C extends E
 
         this.pageContainer.getChildren().clear();
 
+        int pageSize = (int) Math.ceil(foundEntitySize * 1.0 / ROWS_PER_PAGE);
+        AtomicInteger currentPage = new AtomicInteger();
+        TextField pageInputfield = new TextField();
+        pageInputfield.setPromptText("Seitenzahl");
+
         int maxRow = Math.toIntExact(Math.min(ROWS_PER_PAGE, foundEntitySize));
-        for (int i = 0; i < (Math.ceil(foundEntitySize * 1.0 / ROWS_PER_PAGE)); i++) {
-            Button pageButton = new Button(String.valueOf(i + 1));
-            int finalI = i;
-            pageButton.setOnAction(e -> this.entityTable.setItems(FXCollections.observableArrayList(getService().findWithNamedQuery
-                    (getFilterNamedQuery(), parameters, finalI * ROWS_PER_PAGE, maxRow))));
-            this.pageContainer.getChildren().add(pageButton);
-        }
+        Label pageSizeLabel = new Label(getPagingLabel(pageSize, currentPage));
+        pageInputfield.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+               currentPage.set(Integer.parseInt(newValue));
+           }catch (NumberFormatException e){
+               currentPage.set(0);
+           }
+           if(currentPage.get() > 0){
+               this.entityTable.setItems(FXCollections.observableArrayList(getService().findWithNamedQuery
+                       (getFilterNamedQuery(), parameters, (currentPage.get() - 1) * ROWS_PER_PAGE, maxRow)));
+               pageSizeLabel.setText(getPagingLabel(pageSize, currentPage));
+           }
+        });
+        HBox paging = new HBox(10);
+        paging.getChildren().addAll(pageInputfield, pageSizeLabel);
+        this.pageContainer.getChildren().add(paging);
+
+
+//        for (int i = 0; i < pageSize; i++) {
+//            Button pageButton = new Button(String.valueOf(i + 1));
+//            int finalI = i;
+//            pageButton.setOnAction(e -> this.entityTable.setItems(FXCollections.observableArrayList(getService().findWithNamedQuery
+//                    (getFilterNamedQuery(), parameters, finalI * ROWS_PER_PAGE, maxRow))));
+//            this.pageContainer.getChildren().add(pageButton);
+//        }
+    }
+
+    private String getPagingLabel(int pageSize, AtomicInteger currentPage) {
+        return currentPage.get() + "/" + pageSize + "  Seiten";
     }
 
     @Override

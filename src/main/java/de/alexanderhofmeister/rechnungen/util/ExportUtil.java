@@ -67,7 +67,7 @@ public class ExportUtil {
         Velocity.setProperty(Velocity.INPUT_ENCODING, "UTF-8");
         Velocity.setProperty(Velocity.OUTPUT_ENCODING, "UTF-8");
         Velocity.evaluate(new VelocityContext(attributes), stringWriter, "PackageTemplatesVelocity",
-                FileUtils.readFileToString(new File("./templates/" + templateName + ".html"), StandardCharsets.UTF_8));
+                FileUtils.readFileToString(new File("templates/" + templateName + ".html"), StandardCharsets.UTF_8));
         return stringWriter.toString();
     }
 

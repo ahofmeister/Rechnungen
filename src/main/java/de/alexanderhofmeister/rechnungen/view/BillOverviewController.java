@@ -77,22 +77,12 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
     @Override
     List<Button> getCustomButtons(Bill bill) {
         final Button exportAsPdf = ButtonUtil.createIconButton(event -> {
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put("customer", bill.customer);
-            attributes.put("bill", bill);
-            attributes.put("MoneyUtil", MoneyUtil.class);
-            attributes.put("DateUtil", DateUtil.class);
-            attributes.put("Properties", Properties.getInstance());
+            Map<String, Object> attributes = createBillAttributes(bill);
             ExportUtil.createFileFromTemplate(bill.date, new File(ExportUtil.getFileNameBill(bill)), "bill", attributes);
         }, FontAwesomeIconName.
                 SAVE, "Speichern");
         final Button printButton = ButtonUtil.createIconButton(event1 -> {
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put("customer", bill.customer);
-            attributes.put("bill", bill);
-            attributes.put("MoneyUtil", MoneyUtil.class);
-            attributes.put("DateUtil", DateUtil.class);
-            attributes.put("Properties", Properties.getInstance());
+            Map<String, Object> attributes = createBillAttributes(bill);
             ExportUtil.printFile(ExportUtil.createFileFromTemplate(bill.date, new File(ExportUtil.getFileNameBill(bill)), "bill", attributes));
         }, FontAwesomeIconName.PRINT, "Drucken");
 
@@ -103,12 +93,7 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
             attributes.put("bill", bill);
             try {
                 String body = ExportUtil.fillTemplateFromVariables("emailBill", attributes);
-                Map<String, Object> attributes1 = new HashMap<>();
-                attributes1.put("customer", bill.customer);
-                attributes1.put("bill", bill);
-                attributes1.put("MoneyUtil", MoneyUtil.class);
-                attributes1.put("DateUtil", DateUtil.class);
-                attributes1.put("Properties", Properties.getInstance());
+                Map<String, Object> attributes1 = createBillAttributes(bill);
                 ExportUtil.sendViaEmail(ExportUtil.createFileFromTemplate(bill.date, new File(ExportUtil.getFileNameBill(bill)), "bill", attributes1), bill.toString(), body, bill.customer.email);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -118,6 +103,16 @@ public class BillOverviewController extends EntityOverviewController<Bill, BillE
 
 
         return Arrays.asList(exportAsPdf, printButton, emailButton);
+    }
+
+    private Map<String, Object> createBillAttributes(Bill bill) {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("customer", bill.customer);
+        attributes.put("bill", bill);
+        attributes.put("MoneyUtil", MoneyUtil.class);
+        attributes.put("DateUtil", DateUtil.class);
+        attributes.put("Properties", Properties.getInstance());
+        return attributes;
     }
 
     @Override

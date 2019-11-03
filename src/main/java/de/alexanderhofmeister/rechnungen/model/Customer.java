@@ -30,13 +30,25 @@ public class Customer extends BaseEntity {
     @Label("Firmenzusatz")
     public String companyAddition;
 
+    public String getCompanyAddition() {
+        return companyAddition;
+    }
+
     @Required
     @Label("Straße")
     public String street;
 
+    public String getStreet() {
+        return street;
+    }
+
     @Required
     @Label("Hausnummer")
     public String streetNumber;
+
+    public String getStreetNumber() {
+        return streetNumber;
+    }
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.MERGE)
     public List<Bill> bills = new ArrayList<>();
@@ -45,9 +57,17 @@ public class Customer extends BaseEntity {
     @Label("Postleitzahl")
     public String zipCode;
 
+    public String getZipCode() {
+        return zipCode;
+    }
+
     @Required
     @Label("Ort")
     public String city;
+
+    public String getCity() {
+        return city;
+    }
 
     @Label("E-Mail")
     public String email;

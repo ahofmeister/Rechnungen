@@ -28,6 +28,10 @@ public class Bill extends BaseEntity {
     @Label("Rechnungsnummer")
     public Integer number;
 
+    public Integer getNumber() {
+        return number;
+    }
+
     @Required
     @Label("Datum")
     public LocalDate date;
@@ -36,26 +40,47 @@ public class Bill extends BaseEntity {
     @Label("Betrag")
     public BigDecimal amount;
 
+
     @Required
     @Label("Mehrwertsteuer")
     public BigDecimal vat;
+
+    public BigDecimal getVat() {
+        return vat;
+    }
 
     @Required
     @Label("Zwischensumme")
     public BigDecimal subtotal;
 
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
     @Required
     @Label("Porto")
     public BigDecimal postage;
+
+    public BigDecimal getPostage() {
+        return postage;
+    }
 
     @Required
     @Label("Summe")
     public BigDecimal total;
 
+    public BigDecimal getTotal() {
+        return total;
+    }
+
     @ManyToOne
     @Required
     @Label("Kunde")
     public Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
+    }
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -68,14 +93,6 @@ public class Bill extends BaseEntity {
 
     public BigDecimal getAmount() {
         return this.entries.stream().map(entry -> entry.amount).reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
     }
 
     @Override

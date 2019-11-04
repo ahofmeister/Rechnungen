@@ -86,6 +86,10 @@ public class Bill extends BaseEntity {
     @LazyCollection(LazyCollectionOption.FALSE)
     public List<BillEntry> entries = new ArrayList<>();
 
+    public List<BillEntry> getEntries() {
+        return entries;
+    }
+
     @Override
     public String toString() {
         return "Nr. " + number + " vom " + DateUtil.formatToDisplayDate(this.date);

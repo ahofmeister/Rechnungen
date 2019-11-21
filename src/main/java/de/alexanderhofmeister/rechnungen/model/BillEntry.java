@@ -29,8 +29,7 @@ public class BillEntry extends BaseEntity {
 
     @Required
     @Label("Betrag")
-    public
-    BigDecimal amount;
+    public BigDecimal amount;
 
     @ManyToOne
     @Required
@@ -43,6 +42,10 @@ public class BillEntry extends BaseEntity {
 
     public BigDecimal getAmount() {
         return amount;
+    }
+
+    public LocalDate getPeriod() {
+        return period;
     }
 
     public BillEntry(Bill bill) {

@@ -36,6 +36,10 @@ public class Bill extends BaseEntity {
     @Label("Datum")
     public LocalDate date;
 
+    public LocalDate getDate() {
+        return date;
+    }
+
     @Required
     @Label("Betrag")
     public BigDecimal amount;

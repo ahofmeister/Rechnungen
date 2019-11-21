@@ -73,7 +73,7 @@ public class BillEditController extends EntityEditController<Bill> implements In
     private TableColumn<BillEntry, BillEntry> billEntryActionColumn;
 
     @FXML
-    private TextField number;
+    public TextField number;
 
     @FXML
     private TextField customer;
@@ -98,7 +98,7 @@ public class BillEditController extends EntityEditController<Bill> implements In
             this.postage.setText(bill.postage.toString());
         }
         if (bill.number != null) {
-            this.number.setText(String.valueOf(number));
+            this.number.setText(String.valueOf(bill.getNumber()));
         }
 
         initBillEntryTableB(bill);
@@ -210,11 +210,11 @@ public class BillEditController extends EntityEditController<Bill> implements In
         this.total.setText(MoneyUtil.toCurrencyWithSymbol(sum));
     }
 
-    int getNumber() {
+    public int getNumber() {
         return Integer.parseInt(this.number.getText());
     }
 
-    LocalDate getDate() {
+    public LocalDate getDate() {
         return this.date.getValue();
     }
 

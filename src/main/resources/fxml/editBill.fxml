@@ -15,7 +15,7 @@
                                promptText="Kunde"/>
                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="25.0">
                         <children>
-                            <TextField fx:id="number" promptText="Nummer"/>
+                            <TextField fx:id="number" promptText="Rechnungsnummer"/>
                             <DatePicker fx:id="date" promptText="Datum" showWeekNumbers="true"/>
                         </children>
                     </HBox>

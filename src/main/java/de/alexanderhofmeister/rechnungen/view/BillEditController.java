@@ -1,9 +1,6 @@
 package de.alexanderhofmeister.rechnungen.view;
 
-import de.alexanderhofmeister.rechnungen.model.Bill;
-import de.alexanderhofmeister.rechnungen.model.BillEntry;
-import de.alexanderhofmeister.rechnungen.model.BusinessException;
-import de.alexanderhofmeister.rechnungen.model.Customer;
+import de.alexanderhofmeister.rechnungen.model.*;
 import de.alexanderhofmeister.rechnungen.service.CustomerService;
 import de.alexanderhofmeister.rechnungen.util.DateUtil;
 import de.alexanderhofmeister.rechnungen.util.MoneyUtil;
@@ -15,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import org.controlsfx.control.textfield.TextFields;
@@ -199,8 +197,9 @@ public class BillEditController extends EntityEditController<Bill> implements In
     }
 
     private void calculateAndSetSums() {
+        int vatValue = Properties.getInstance().getInt("mwst");
         BigDecimal amount = this.billEntries.getItems().stream().map(billEntry -> billEntry.amount).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal vat = amount.divide(BigDecimal.valueOf(100)).multiply(BigDecimal.valueOf(19));
+        BigDecimal vat = amount.divide(BigDecimal.valueOf(100)).multiply(BigDecimal.valueOf(vatValue));
         BigDecimal subtotal = amount.add(vat);
         BigDecimal sum = subtotal.add(MoneyUtil.convertToBigDecimal(postage.getText()));
 

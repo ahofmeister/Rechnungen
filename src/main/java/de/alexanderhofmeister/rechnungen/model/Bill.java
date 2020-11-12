@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = Bill.NQ_FILTER, query = "SELECT b FROM Bill b JOIN b.customer c WHERE c.company LIKE :filter OR c.companyAddition LIKE :filter ORDER BY b.date DESC, c.company, c.companyAddition"),
+        @NamedQuery(name = Bill.NQ_FILTER, query = "SELECT b FROM Bi    ll b WHERE b.customer.company LIKE :filter OR b.customer.companyAddition LIKE :filter ORDER BY b.date DESC, b.customer.company, b.customer.companyAddition"),
         @NamedQuery(name = Bill.NQ_COUNT_FILTER, query = "SELECT count(b) FROM Bill b JOIN b.customer c WHERE c.company LIKE :filter OR c.companyAddition LIKE :filter"),
         @NamedQuery(name = Bill.NQ_LIST_ALL_BY_CUSTOMER, query = "SELECT b FROM Bill b where b.customer = :customer")})
 public class Bill extends BaseEntity {
@@ -87,7 +87,7 @@ public class Bill extends BaseEntity {
     }
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @LazyCollection(LazyCollectionOption.TRUE)
     public List<BillEntry> entries = new ArrayList<>();
 
     public List<BillEntry> getEntries() {

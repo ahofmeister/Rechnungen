@@ -50,7 +50,7 @@ public class Customer extends BaseEntity {
         return streetNumber;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.MERGE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.MERGE)
     public List<Bill> bills = new ArrayList<>();
 
     @Required
